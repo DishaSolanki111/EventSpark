@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager Registration - EventSpark</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            font-family: sans-serif;
+  background-image: url('bac2.jpeg'); /* Replace with your image path */
+background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.4);
+            z-index: -1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+          background-color: white;
+            /* background-color: rgba(0,0,0, 0.1); */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 70px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 3.0rem;
+            font-weight: bold;
+            color: #1a365d;
+ font-family:News706 BT;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2b6cb0;
+        }
+
+
+        .registration-container {
+            width: 550px;
+            z-index: 1;
+            margin-top: 80px; /* Adjust for nav height */
+        }
+
+        .registration-form {
+            background-color: #EFD0CE;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-family: Cooper;
+        }
+
+        .registration-form > p {
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-family: Cambria Math;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: Cambria Math;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: Cambria Math;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #2c5282;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #718096;
+        }
+
+        .login-link a {
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .registration-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+<script>
+function validateForm()
+{
+var x=myForm.fname.value;
+var xlen=myForm.mob.value.length;
+var numbers = /^[0-9]+$/; 
+var a=" "; //added space bcoz variable become undefined and gives error
+var e=myForm.email.value;
+var atpos=e.indexOf("@");
+var dotpos=e.indexOf(".");
+var pass = myForm.pass.value;
+var cnf = myForm.cnfpass.value;
+if (x==null || x=="")
+  {
+  	a+="First name must be filled out\n";
+  }
+if(xlen<10 || xlen>10)
+  {
+	a+="mobile no should be 10 digits\n";
+  }
+if(myForm.mob.value.match(numbers))  
+{  
+ 
+}  
+else  
+{  
+a+="mobile no must have numeric characters only\n";  
+
+}
+if (atpos<1 || dotpos<atpos+2 || dotpos+2>=e.length)
+  {
+  a+="enter valid valid e-mail address \n";
+   }
+
+if((myForm.specialization[0].checked==false) &&(myForm.specialization[1].checked==false) &&(myForm.specialization[2].checked==false) &&(myForm.specialization[3].checked==false) &&(myForm.specialization[4].checked==false))
+{
+ 	a+="please enter specialization";
+}
+
+ if(pass=="" || pass==null)
+{
+	a+="Password can't be blank";
+}
+ if(pass != cnf)
+{
+	a+="Password dosent match";
+}
+	
+if(a==" ")
+	{
+	alert("done");
+	return true; //just to check if only space is there so not to display in alert
+	}
+	else
+	{
+	alert(a);
+	}
+}
+</script>
+
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="logo.jpg" alt="EventSpark Logo">
+            <span>EventSpark</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="Event.html">Events</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <div class="registration-container">
+        <div class="registration-form">
+            <div class="header">
+                <h1>Event Manager Registration</h1>
+            </div>
+            <p>Join our network of professional event managers</p>
+            <!-- <form name="myForm" action="#" method="POST" onsubmit="return validateForm()"> -->
+            <form name="myForm" action="http://localhost:5000/register-manager" method="POST">
+                <div class="form-group">
+                    <label for="fullname">Full_Name</label>
+                    <input type="text" id="fullname" name="fname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email_Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone_Number</label>
+                    <input type="tel" id="phone" name="mob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company_Name</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Years_of_Experience</label>
+                    <input type="number" id="experience" name="experience" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="specialization">EventSpecialization</label>
+                    <select id="specialization" name="specialization" required>
+                        <option value="">Select Specialization</option>
+                        <option value="weddings">Weddings</option>
+                        <option value="corporate">Corporate Events</option>
+                        <option value="concerts">Concerts & Festivals</option>
+                        <option value="social">Social Gatherings</option>
+                        <option value="sports">Sports Events</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="pass" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm_Password</label>
+                    <input type="password" id="confirm-password" name="cnfpass" required>
+                </div>
+                
+                <!-- <button type="submit" class="submit-btn">Create Account</button> -->
+                <button type="submit" class="submit-btn">submit</button>
+                <!-- <a href="Event.html">Events</a> -->
+            </form>
+            
+            <p class="login-link">Already have an account? <a href="finallogin.html">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>

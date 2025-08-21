@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EventSpark</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            font-family: sans-serif;
+            background-image: url('bac2.jpeg'); /* Replace with your image path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: -1;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+	        background-color: white;
+            /* background-color: rgba(255, 255, 255, 0.4); */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 3.0rem;
+            font-weight: bold;
+            color: #1a365d;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+	align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2b6cb0;
+        }
+
+ 
+        .registration-container {
+	height:30%;
+            width: 30%;
+            z-index: 1;
+            margin-top: 80px; /* Adjust for nav height */
+        }
+
+        .registration-form {
+            background-color: #EFD0CE;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-family: Cooper;
+        }
+
+        .registration-form > p {
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            font-family: Cambria Math;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: Cambria Math;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: Cambria Math;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #2c5282;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #718096;
+        }
+
+        .login-link a {
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .registration-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+<script>
+function validate() {
+    var id = document.getElementById("id").value;
+    var pass = document.getElementById("pass").value;
+
+    if (id === "") {
+        alert("User ID cannot be empty");
+        return false;
+    }
+
+    if (pass === "") {
+        alert("Password cannot be empty");
+        return false;
+    }
+    return true;
+}
+</script>
+
+
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="logo.jpg" alt="EventSpark Logo">
+            <span>EventSpark</span>
+        </div>
+        <div class="nav-links">
+           <a href="home.html">Home</a>
+            <a href="Event.html">Events</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+	<a href="select_role.html" class="signup-btn">Sign up</a>
+	
+        </div>
+    </nav>
+
+    <div class="registration-container">
+        <div class="registration-form">
+            <div class="header">
+                <h1>Login</h1>
+            </div>
+         
+            <!-- <form name="reg_form" onsubmit="return validate()" action="#" method="POST"> -->
+            <form action="http://localhost:5000/login" method="POST">
+                <div class="form-group">
+                 <label for="id">User ID</label>
+            <input type="text" id="id" name="id" placeholder="Enter User ID">
+                </div>
+
+                <div class="form-group">
+                    <label for="pass">Password</label>
+            <input type="password" id="pass" name="pass" placeholder="Enter Password">
+                </div>
+
+                <div class="form-group">
+                   <label for="identity">Select Identity</label>
+            <select id="identity" name="identity">
+                <option value="customer">Customer</option>
+                <option value="event_manager">Event Manager</option>
+            </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+            
+<div class="signup-link">
+<a href="select_role.html">If you are not Registered</a> 
+</div>
+<div class="signup-link">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role - EventMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+            position: fixed;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+.logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 70px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 3.0rem;
+            font-weight: bold;
+            color: #1a365d;
+            font-family:News706 BT;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2b6cb0;
+        }
+
+        /* Role Selection Styles */
+        .role-selection {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 2rem; /* Adjusted top padding */
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('homebac.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+ .login-btn, .signup-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .login-btn {
+      background: #B8E2F4;
+      color: white;
+    }
+
+        .role-selection h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .role-selection p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .role-cards {
+            display: flex;
+            gap: 2rem;
+            animation: fadeIn 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 300px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .role-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-card p {
+            font-size: 1rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .role-cards {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .role-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+	<img src="logo.jpg" >
+ 
+            <span>EventSpark</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="Event.html">Events</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+	
+	<a href="finallogin.html" class="login-btn">Login</a>
+        </div>
+    </nav>
+
+    <div class="role-selection">
+        <h1>Welcome to EventSpark</h1>
+        <p>Please select your role to continue</p>
+        
+        <div class="role-cards">
+            <a href="customerR.html" class="role-card">
+                <h2>I am a Customer</h2>
+                <p>Looking to plan and book events</p>
+            </a>
+            
+            <a href="mangerreg.html" class="role-card">
+                <h2>I am an Event Manager</h2>
+                <p>Professional event planning and management</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

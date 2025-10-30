@@ -5,94 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - EventSpark</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Reset and base styles */
+    * {
       margin: 0;
       padding: 0;
-      background: #f8f9fa;
-      color: #333;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    /* Navbar */
-    header {
+    /* Navigation */
+    nav {
+      background-color: white;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 50px;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .logo {
       display: flex;
       align-items: center;
     }
+
     .logo img {
-      width: 50px;
+      height: 70px;
       margin-right: 10px;
     }
-    .logo h1 {
-      font-size: 22px;
-      color: #1a237e;
-      margin: 0;
-    }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-      padding: 0;
-    }
-    nav ul li {
-      display: inline;
-    }
-    nav ul li a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-    }
-    nav ul li a:hover {
-      color: #007BFF;
-    }
-
-    .auth-buttons button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 20px;
+    .logo span {
+      font-size: 3.0rem;
       font-weight: bold;
+      color: #1a365d;
+      font-family: News706 BT;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #4a5568;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #2b6cb0;
+    }
+
+    .login-btn, .signup-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
       cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
     }
-    .signup {
-      background: #a5d6a7;
-      color: #fff;
-      margin-right: 10px;
+
+    .login-btn {
+      background: #B8E2F4;
+      color: white;
     }
-    .login {
-      background: #64b5f6;
-      color: #fff;
+
+    .signup-btn {
+      background: #B7E892;
+      color: white;
+    }
+
+    .login-btn:hover {
+      background: #2c5282;
+    }
+
+    .signup-btn:hover {
+      background: #2f855a;
     }
 
     /* About Section */
     .about-section {
       max-width: 900px;
-      margin: 60px auto;
-      background: #fff;
+      margin: 120px auto 60px; /* Adjusted margin to account for fixed nav */
+      background: rgba(255, 255, 255, 0.9);
       padding: 40px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      animation: slideUp 1s ease-out;
     }
+
     .about-section h2 {
       text-align: center;
       font-size: 28px;
-      color: #1a237e;
+      color: #1a365d;
       margin-bottom: 20px;
     }
+
     .about-section p {
       font-size: 16px;
       line-height: 1.8;
       margin-bottom: 15px;
       text-align: justify;
+      color: #333;
     }
 
     /* Footer */
@@ -101,32 +121,55 @@
       padding: 20px;
       background: #f1f1f1;
       font-size: 14px;
-      margin-top: 40px;
       color: #555;
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .about-section {
+        margin: 100px 20px 60px;
+        padding: 20px;
+      }
+
+      .about-section h2 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
-  <header>
+  <nav>
     <div class="logo">
-      <img src="logo.jpg" alt="EventSpark Logo"> <!-- Replace with your logo -->
-      <h1>EventSpark</h1>
+      <img src="logo.jpg" alt="EventSpark Logo">
+      <span>EventSpark</span>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="events.html">Events</a></li>
-        <li><a href="about.html">About Us</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-    <div class="auth-buttons">
-      <button class="signup">Sign up</button>
-      <button class="login">Login</button>
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="Event.html">Events</a>
+      <a href="about_us.html">About Us</a>
+      <a href="contact.html">Contact</a>
+      <a href="select_role.html" class="signup-btn">Sign up</a>
+      <a href="login.html" class="login-btn">Login</a>
     </div>
-  </header>
+  </nav>
 
   <!-- About Content -->
   <section class="about-section">

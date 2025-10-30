@@ -1,748 +1,748 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Management System</title>
-  <style>
-    /* Base Styles */
-   * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <style>
+      /* Base Styles */
+    * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: Arial, sans-serif;
+          }
+
+          /* Navigation */
+          nav {
+              background: white;
+              padding: 1rem 2rem;
+              /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+              position: fixed;
+              width: 100%;
+              z-index: 10;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+          }
+  .logo {
+              display: flex;
+              align-items: center;
+          }
+
+          .logo img {
+              height: 70px;
+              margin-right: 10px;
+          }
+
+          .logo span {
+              font-size: 3.0rem;
+              font-weight: bold;
+              color: #1a365d;
+  font-family:News706 BT;
+          }
+
+          .nav-links {
+              display: flex;
+              gap: 1.5rem;
+              align-items: center;
+          }
+
+          .nav-links a {
+              text-decoration: none;
+              color: #4a5568;
+              font-weight: 500;
+              transition: color 0.3s;
+          }
+
+          .nav-links a:hover {
+              color: #2b6cb0;
+          }
+
+
+      .login-btn, .signup-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .login-btn {
+        background: #B8E2F4;
+        color: white;
+      }
+
+      .signup-btn {
+        background: #B7E892;
+        color: white;
+      }
+
+      .login-btn:hover {
+        background: #2c5282;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+
+      .signup-btn:hover {
+        background: #2f855a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #ebf4ff 0%, #f5f0ff 100%);
+        color: #2d3748;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                    url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-align: center;
+      }
+
+      .hero-content {
+        width: 100%;
+        padding: 2rem;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        animation: slideUp 1s ease-out;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        animation: slideUp 1s ease-out 0.2s forwards;
+        opacity: 0;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Main Content Styles */
+      main {
+        padding: 40px 0;
+      }
+
+      main h2 {
+        font-size: 3.5rem;
+        font-weight: 600;
+    font-style:Narrow Italic;
+  font-family:Segoe Print;
+        text-align: center;
+        margin-bottom: 40px;
+        color:#C19A6B;
+      }
+
+      /* Categories Grid */
+      .categories {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Category Card Styles */
+      .category-card {
+        background-color: #F3E9DC;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .category-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .category-card .icon {
+        margin-bottom: 16px;
+        font-size: 2rem;
+      }
+
+      .category-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 8px;
+      }
+
+      .category-card p {
+        color: #718096;
+        font-size: 0.875rem;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        padding: 16px;
+      }
+
+      .modal-content {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: modalFadeIn 0.3s ease-out;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .modal-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+      }
+
+      .close-button {
+        font-size: 1.5rem;
+        color: #718096;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .close-button:hover {
+        color: #2d3748;
+        background-color: #f7fafc;
+      }
+
+      .modal-body {
+        padding: 24px;
+        overflow-y: auto;
+        max-height: calc(90vh - 80px);
+      }
+
+      /* Event Types Grid */
+      .event-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 24px;
+      }
+
+      /* Event Type Card Styles */
+      .event-type-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .event-type-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+      }
+
+      .event-image {
+        height: 180px;
+        overflow: hidden;
+      }
+
+      .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .event-type-card:hover .event-image img {
+        transform: scale(1.1);
+      }
+
+      .event-type-card h3 {
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d3748;
+        text-align: center;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .categories {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+        
+        .event-types {
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+        
+        .modal-content {
+          max-width: 95%;
         }
 
-        /* Navigation */
-        nav {
-            background: white;
-            padding: 1rem 2rem;
-            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-            position: fixed;
-            width: 100%;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-.logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 70px;
-            margin-right: 10px;
-        }
-
-        .logo span {
-            font-size: 3.0rem;
-            font-weight: bold;
-            color: #1a365d;
- font-family:News706 BT;
+        .hero h1 {
+          font-size: 2.5rem;
         }
 
         .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
+          gap: 1rem;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
+        .logo span {
+          font-size: 2rem;
         }
+      }
 
-        .nav-links a:hover {
-            color: #2b6cb0;
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 2rem;
         }
-
-
-    .login-btn, .signup-btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .login-btn {
-      background: #B8E2F4;
-      color: white;
-    }
-
-    .signup-btn {
-      background: #B7E892;
-      color: white;
-    }
-
-    .login-btn:hover {
-      background: #2c5282;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .signup-btn:hover {
-      background: #2f855a;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ebf4ff 0%, #f5f0ff 100%);
-      color: #2d3748;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Hero Section */
-    .hero {
-      height: 100vh;
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                  url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      color: white;
-      text-align: center;
-    }
-
-    .hero-content {
-      width: 100%;
-      padding: 2rem;
-    }
-
-    .hero h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      animation: slideUp 1s ease-out;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      margin-bottom: 2rem;
-      animation: slideUp 1s ease-out 0.2s forwards;
-      opacity: 0;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Main Content Styles */
-    main {
-      padding: 40px 0;
-    }
-
-    main h2 {
-      font-size: 3.5rem;
-      font-weight: 600;
-  font-style:Narrow Italic;
- font-family:Segoe Print;
-      text-align: center;
-      margin-bottom: 40px;
-      color:#C19A6B;
-    }
-
-    /* Categories Grid */
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Category Card Styles */
-    .category-card {
-      background-color: #F3E9DC;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .category-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .category-card .icon {
-      margin-bottom: 16px;
-      font-size: 2rem;
-    }
-
-    .category-card h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 8px;
-    }
-
-    .category-card p {
-      color: #718096;
-      font-size: 0.875rem;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .modal-header h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #2d3748;
-      margin: 0;
-    }
-
-    .close-button {
-      font-size: 1.5rem;
-      color: #718096;
-      cursor: pointer;
-      transition: color 0.2s ease;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .close-button:hover {
-      color: #2d3748;
-      background-color: #f7fafc;
-    }
-
-    .modal-body {
-      padding: 24px;
-      overflow-y: auto;
-      max-height: calc(90vh - 80px);
-    }
-
-    /* Event Types Grid */
-    .event-types {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 24px;
-    }
-
-    /* Event Type Card Styles */
-    .event-type-card {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .event-type-card:hover {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      transform: translateY(-5px);
-    }
-
-    .event-image {
-      height: 180px;
-      overflow: hidden;
-    }
-
-    .event-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .event-type-card:hover .event-image img {
-      transform: scale(1.1);
-    }
-
-    .event-type-card h3 {
-      padding: 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #2d3748;
-      text-align: center;
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-
-    /* Responsive Styles */
-    @media (max-width: 768px) {
-      .categories {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      }
-      
-      .event-types {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      }
-      
-      .modal-content {
-        max-width: 95%;
-      }
-
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-
-      .nav-links {
-        gap: 1rem;
-      }
-
-      .logo span {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-      
-      .categories {
-        grid-template-columns: 1fr;
-      }
-      
-      .event-types {
-        grid-template-columns: 1fr;
-      }
-      
-      .modal-header h2 {
-        font-size: 1.25rem;
-      }
-
-      .nav-links a:not(.login-btn):not(.signup-btn) {
-        display: none;
-      }
-
-      .logo span {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <div class="logo">
-<img src="logo.jpg" >
-<span>EventSpark</span>
-     
-    </div>
-    <div class="nav-links">
-      <a href="home.html">Home</a>
-  
-            <a href="#">About Us</a>
-            <a href="#">Contact</a>
-	<a href="select_role.html" class="signup-btn">Sign up</a>
-	<a href="login.html" class="login-btn">Login</a>
-    </div>
-  </nav>
-
-  <div class="hero">
-    <div class="hero-content">
-      
-     
-      <main>
-<BR>
-<BR>
-<BR>
-        <h2> Select an Event Category</h2>
         
-        <div class="categories">
-          <!-- Social Gatherings -->
-          <div class="category-card" id="social-gatherings">
-            <div class="icon">
-              <i class="fas fa-users" style="color: #4299e1;">👥</i>
-            </div>
-            <h3>Social Gatherings</h3>
-            <p>Click to view event types</p>
-          </div>
+        .categories {
+          grid-template-columns: 1fr;
+        }
+        
+        .event-types {
+          grid-template-columns: 1fr;
+        }
+        
+        .modal-header h2 {
+          font-size: 1.25rem;
+        }
 
-          <!-- Parties -->
-          <div class="category-card" id="parties">
-            <div class="icon">
-              <i class="fas fa-music" style="color: #9f7aea;">🎵</i>
-            </div>
-            <h3>Parties</h3>
-            <p>Click to view event types</p>
-          </div>
+        .nav-links a:not(.login-btn):not(.signup-btn) {
+          display: none;
+        }
 
-          <!-- Corporate Events -->
-          <div class="category-card" id="corporate-events">
-            <div class="icon">
-              <i class="fas fa-briefcase" style="color: #4a5568;">💼</i>
-            </div>
-            <h3>Corporate Events</h3>
-            <p>Click to view event types</p>
-          </div>
-
-          <!-- Classes & Workshops -->
-          <div class="category-card" id="classes-workshops">
-            <div class="icon">
-              <i class="fas fa-book-open" style="color: #48bb78;">📚</i>
-            </div>
-            <h3>Classes & Workshops</h3>
-            <p>Click to view event types</p>
-          </div>
-
-          <!-- Festivals -->
-          <div class="category-card" id="festivals">
-            <div class="icon">
-              <i class="fas fa-star" style="color: #ecc94b;">⭐</i>
-            </div>
-            <h3>Festivals</h3>
-            <p>Click to view event types</p>
-          </div>
-
-         
-        </div>
-      </main>
-    </div>
-  </div>
-
-  <!-- Modal Overlays for Each Category -->
-  <!-- Social Gatherings Modal -->
-  <div class="modal" id="social-gatherings-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Social Gatherings</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="wedding.jpeg" alt="Wedding">
-            </div>
-            <h3>Wedding</h3>
-          </div>
-     
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="birthday.jpg" alt="Birthday">
-            </div>
-            <h3>Birthday</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="anniversary.jpg" alt="Anniversary">
-            </div>
-            <h3>Anniversary</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1482575832494-771f74bf6857?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Holiday Party">
-            </div>
-            <h3>Holiday Party</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="babyshower.jpg" alt="Baby Shower">
-            </div>
-            <h3>Baby Shower</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="bridetobe.jpg" alt="Bride & Groom Party">
-            </div>
-            <h3>Bride & Groom Party</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Parties Modal -->
-  <div class="modal" id="parties-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Parties</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Concert">
-            </div>
-            <h3>Concert</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Birthday">
-            </div>
-            <h3>Birthday</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Graduation">
-            </div>
-            <h3>Graduation</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="house.jpg" alt="Housewarming">
-            </div>
-            <h3>Housewarming</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Retirement Party">
-            </div>
-            <h3>Retirement Party</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="halloween.jpeg" alt="Halloween Party">
-            </div>
-            <h3>Halloween Party</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Corporate Events Modal -->
-  <div class="modal" id="corporate-events-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Corporate Events</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Conference">
-            </div>
-            <h3>Conference</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1558008258-3256797b43f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Seminar">
-            </div>
-            <h3>Seminar</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="product.jpeg" alt="Product Launch">
-            </div>
-            <h3>Product Launch</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Classes & Workshops Modal -->
-  <div class="modal" id="classes-workshops-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Classes & Workshops</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Educational Classes">
-            </div>
-            <h3>Educational Classes</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Skill-based Classes">
-            </div>
-            <h3>Skill-based Classes</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="dance.jpg" alt="Dance Workshop">
-            </div>
-            <h3>Dance Workshop</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="music.jpeg" alt="Music Workshop">
-            </div>
-            <h3>Music Workshop</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="creative.jpeg" alt="Creative Workshop">
-            </div>
-            <h3>Creative Workshop</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Festivals Modal -->
-  <div class="modal" id="festivals-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Festivals</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="diwali.jpeg" alt="Diwali">
-            </div>
-            <h3>Diwali</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="christmas.jpeg" alt="Christmas">
-            </div>
-            <h3>Christmas</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="holi.jpeg" alt="Holi">
-            </div>
-            <h3>Holi</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="newyear.jpeg" alt="New Year">
-            </div>
-            <h3>New Year</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="navratri.jpeg" alt="Navratri">
-            </div>
-            <h3>Navratri</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="cultural.jpeg" alt="Cultural Event">
-            </div>
-            <h3>Cultural Event</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-      </div>
-  </div>
-
-  <script>
-    // Simple JavaScript to handle modal functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get all category cards
-      const categoryCards = document.querySelectorAll('.category-card');
-      const closeButtons = document.querySelectorAll('.close-button');
-      const modals = document.querySelectorAll('.modal');
+        .logo span {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+  <img src="logo.jpg" >
+  <span>EventSpark</span>
       
-      // Add click event to each category card
-      categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
-          const modalId = this.id + '-modal';
-          document.getElementById(modalId).style.display = 'flex';
+      </div>
+      <div class="nav-links">
+        <a href="home.html">Home</a>
+    
+              <a href="#">About Us</a>
+              <a href="#">Contact</a>
+    <a href="select_role.html" class="signup-btn">Sign up</a>
+    <a href="login.html" class="login-btn">Login</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        
+      
+        <main>
+  <BR>
+  <BR>
+  <BR>
+          <h2> Select an Event Category</h2>
+          
+          <div class="categories">
+            <!-- Social Gatherings -->
+            <div class="category-card" id="social-gatherings">
+              <div class="icon">
+                <i class="fas fa-users" style="color: #4299e1;">👥</i>
+              </div>
+              <h3>Social Gatherings</h3>
+              <p>Click to view event types</p>
+            </div>
+
+            <!-- Parties -->
+            <div class="category-card" id="parties">
+              <div class="icon">
+                <i class="fas fa-music" style="color: #9f7aea;">🎵</i>
+              </div>
+              <h3>Parties</h3>
+              <p>Click to view event types</p>
+            </div>
+
+            <!-- Corporate Events -->
+            <div class="category-card" id="corporate-events">
+              <div class="icon">
+                <i class="fas fa-briefcase" style="color: #4a5568;">💼</i>
+              </div>
+              <h3>Corporate Events</h3>
+              <p>Click to view event types</p>
+            </div>
+
+            <!-- Classes & Workshops -->
+            <div class="category-card" id="classes-workshops">
+              <div class="icon">
+                <i class="fas fa-book-open" style="color: #48bb78;">📚</i>
+              </div>
+              <h3>Classes & Workshops</h3>
+              <p>Click to view event types</p>
+            </div>
+
+            <!-- Festivals -->
+            <div class="category-card" id="festivals">
+              <div class="icon">
+                <i class="fas fa-star" style="color: #ecc94b;">⭐</i>
+              </div>
+              <h3>Festivals</h3>
+              <p>Click to view event types</p>
+            </div>
+
+          
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal Overlays for Each Category -->
+    <!-- Social Gatherings Modal -->
+    <div class="modal" id="social-gatherings-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Social Gatherings</h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="event-types">
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="wedding.jpeg" alt="Wedding">
+              </div>
+              <h3>Wedding</h3>
+            </div>
+      
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="birthday.jpg" alt="Birthday">
+              </div>
+              <h3>Birthday</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="anniversary.jpg" alt="Anniversary">
+              </div>
+              <h3>Anniversary</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1482575832494-771f74bf6857?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Holiday Party">
+              </div>
+              <h3>Holiday Party</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="babyshower.jpg" alt="Baby Shower">
+              </div>
+              <h3>Baby Shower</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="bridetobe.jpg" alt="Bride & Groom Party">
+              </div>
+              <h3>Bride & Groom Party</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parties Modal -->
+    <div class="modal" id="parties-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Parties</h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="event-types">
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Concert">
+              </div>
+              <h3>Concert</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Birthday">
+              </div>
+              <h3>Birthday</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Graduation">
+              </div>
+              <h3>Graduation</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="house.jpg" alt="Housewarming">
+              </div>
+              <h3>Housewarming</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Retirement Party">
+              </div>
+              <h3>Retirement Party</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="halloween.jpeg" alt="Halloween Party">
+              </div>
+              <h3>Halloween Party</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corporate Events Modal -->
+    <div class="modal" id="corporate-events-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Corporate Events</h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="event-types">
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Conference">
+              </div>
+              <h3>Conference</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1558008258-3256797b43f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Seminar">
+              </div>
+              <h3>Seminar</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="product.jpeg" alt="Product Launch">
+              </div>
+              <h3>Product Launch</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Classes & Workshops Modal -->
+    <div class="modal" id="classes-workshops-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Classes & Workshops</h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="event-types">
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Educational Classes">
+              </div>
+              <h3>Educational Classes</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Skill-based Classes">
+              </div>
+              <h3>Skill-based Classes</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="dance.jpg" alt="Dance Workshop">
+              </div>
+              <h3>Dance Workshop</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="music.jpeg" alt="Music Workshop">
+              </div>
+              <h3>Music Workshop</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="creative.jpeg" alt="Creative Workshop">
+              </div>
+              <h3>Creative Workshop</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Festivals Modal -->
+    <div class="modal" id="festivals-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Festivals</h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="event-types">
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="diwali.jpeg" alt="Diwali">
+              </div>
+              <h3>Diwali</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="christmas.jpeg" alt="Christmas">
+              </div>
+              <h3>Christmas</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="holi.jpeg" alt="Holi">
+              </div>
+              <h3>Holi</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="newyear.jpeg" alt="New Year">
+              </div>
+              <h3>New Year</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="navratri.jpeg" alt="Navratri">
+              </div>
+              <h3>Navratri</h3>
+            </div>
+            <div class="event-type-card">
+              <div class="event-image">
+                <img src="cultural.jpeg" alt="Cultural Event">
+              </div>
+              <h3>Cultural Event</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        </div>
+    </div>
+
+    <script>
+      // Simple JavaScript to handle modal functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get all category cards
+        const categoryCards = document.querySelectorAll('.category-card');
+        const closeButtons = document.querySelectorAll('.close-button');
+        const modals = document.querySelectorAll('.modal');
+        
+        // Add click event to each category card
+        categoryCards.forEach(card => {
+          card.addEventListener('click', function() {
+            const modalId = this.id + '-modal';
+            document.getElementById(modalId).style.display = 'flex';
+          });
         });
-      });
-      
-      // Add click event to close buttons
-      closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const modal = this.closest('.modal');
-          modal.style.display = 'none';
-        });
-      });
-      
-      // Close modal when clicking outside of modal content
-      window.addEventListener('click', function(event) {
-        modals.forEach(modal => {
-          if (event.target === modal) {
+        
+        // Add click event to close buttons
+        closeButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
             modal.style.display = 'none';
-          }
+          });
+        });
+        
+        // Close modal when clicking outside of modal content
+        window.addEventListener('click', function(event) {
+          modals.forEach(modal => {
+            if (event.target === modal) {
+              modal.style.display = 'none';
+            }
+          });
         });
       });
-    });
-  </script>
-</body>
-</html>
+    </script>
+  </body>
+  </html>

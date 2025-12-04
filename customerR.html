@@ -48,11 +48,14 @@ background-position: center;
             justify-content: space-between;
             align-items: center;
             z-index: 10;
+            flex-wrap: wrap;
         }
 
         .logo {
             display: flex;
             align-items: center;
+            justify-content: center;
+            
         }
 
         .logo img {
@@ -85,10 +88,11 @@ align-items: center;
         }
 
         .registration-container {
-	height:30%;
-            width: 30%;
-            z-index: 1;
-            margin-top: 80px; /* Adjust for nav height */
+            width: 90%;
+            max-width: 400px;
+            z-index: 10; 
+            margin-top: 100px;
+            margin-bottom: 20px;  /* Adjust for nav height */
         }
 
         .registration-form {
@@ -183,7 +187,63 @@ align-items: center;
 
         @media (max-width: 768px) {
             .registration-form {
-                padding: 1.5rem;
+                padding: 1.2rem;
+            }
+            nav {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px 12px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .logo {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .logo span {
+                font-size: 2rem;
+            }
+
+            .logo image {
+                height: 50px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: row;  /* keep links in one row */
+                gap: 12px;
+                width: 100%;
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .registration-container {
+               margin-top: 220px; 
+            }
+            body {
+                background-size: contain;
+                background-position: top;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 0.9rem;
+                font-size: 1rem;
+            }
+
+            .submit-btn {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
             }
         }
     </style>

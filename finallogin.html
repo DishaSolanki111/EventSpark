@@ -160,12 +160,43 @@
             color: #2b6cb0;
         }
 
-        @media (max-width: 450px) {
-            .login-box {
-                width: 90%;
-                padding: 25px;
-            }
-        }
+   /* Mobile Navbar Fix */
+@media (max-width: 768px) {
+
+    nav {
+        padding: 1rem;
+        flex-wrap: wrap;       /* allow wrapping */
+        justify-content: center; /* center items */
+        gap: 10px;
+    }
+
+    .logo {
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;   /* optional spacing below logo */
+    }
+
+    .logo img {
+        height: 50px; /* smaller logo */
+    }
+
+    .logo span {
+        font-size: 1.7rem; /* smaller text */
+        margin-left: 9px;
+        margin-top: 0;      /* remove extra spacing */
+    }
+
+    .nav-links {
+        flex-direction: row;   /* keep horizontal */
+        flex-wrap: wrap;       /* wrap links to next line if needed */
+        gap: 1rem;
+        justify-content: center;
+        width: 100%;
+    }
+}   }
+
+    }
+
     </style>
 
 </head>

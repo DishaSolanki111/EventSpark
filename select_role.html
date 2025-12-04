@@ -162,6 +162,47 @@
             .role-card {
                 width: 100%;
             }
+                        nav {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px 12px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .logo {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .logo img {
+                height: 50px; /* smaller logo */
+            }
+
+            .logo span {
+                font-size: 1.7rem; /* smaller text */
+                margin-left: 5px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: row;  /* keep links in one row */
+                gap: 12px;
+                width: 100%;
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            .nav-links a {
+                margin-left: 0.95rem;
+                font-size: 0.90rem;
+            }
+
+            .login-box {
+                margin-top: 140px; /* pushes form below taller nav */
+            }
+            
         }
     </style>
 </head>

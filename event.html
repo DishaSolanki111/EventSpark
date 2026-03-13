@@ -1,748 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Management System</title>
-  <style>
-    /* Base Styles */
-   * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Navigation */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - EventSpark</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f0f4f8; min-height: 100vh; }
         nav {
-            background: white;
-            padding: 1rem 2rem;
-            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-            position: fixed;
-            width: 100%;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: white; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: fixed; top: 0; width: 100%; z-index: 10;
         }
-.logo {
-            display: flex;
-            align-items: center;
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { height: 55px; }
+        .logo span { font-size: 2rem; font-weight: bold; color: #1a365d; font-family: News706 BT; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: #4a5568; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #2b6cb0; }
+        .user-badge { padding: 6px 14px; background: #ebf8ff; color: #2b6cb0; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+        .logout-link { color: #e53e3e !important; }
+
+        .main { padding: 90px 2rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; color: #1a365d; }
+        .page-header p { color: #718096; margin-top: 4px; }
+
+        .filters { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 8px 18px; border: 2px solid #e2e8f0;
+            border-radius: 20px; background: white; cursor: pointer;
+            font-size: 0.9rem; color: #4a5568; transition: all 0.2s;
         }
-
-        .logo img {
-            height: 70px;
-            margin-right: 10px;
+        .filter-btn.active { border-color: #2b6cb0; background: #2b6cb0; color: white; }
+        .search-bar {
+            margin-left: auto; padding: 8px 16px; border: 1px solid #e2e8f0;
+            border-radius: 20px; font-size: 0.9rem; width: 240px; outline: none;
         }
+        .search-bar:focus { border-color: #2b6cb0; }
 
-        .logo span {
-            font-size: 3.0rem;
-            font-weight: bold;
-            color: #1a365d;
- font-family:News706 BT;
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+        .event-card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
+        .event-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .card-banner {
+            height: 8px;
+            background: linear-gradient(90deg, #2b6cb0, #63b3ed);
         }
+        .card-banner.weddings  { background: linear-gradient(90deg, #d53f8c, #f687b3); }
+        .card-banner.corporate { background: linear-gradient(90deg, #2b6cb0, #63b3ed); }
+        .card-banner.concerts  { background: linear-gradient(90deg, #6b46c1, #b794f4); }
+        .card-banner.social    { background: linear-gradient(90deg, #276749, #68d391); }
+        .card-banner.sports    { background: linear-gradient(90deg, #c05621, #f6ad55); }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
+        .card-body { padding: 1.3rem; }
+        .card-category { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #718096; margin-bottom: 6px; }
+        .card-title { font-size: 1.2rem; font-weight: 700; color: #1a365d; margin-bottom: 10px; }
+        .card-meta { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+        .card-meta span { font-size: 0.875rem; color: #4a5568; }
+        .card-price { font-size: 1.25rem; font-weight: 700; color: #2b6cb0; margin-bottom: 12px; }
+        .card-seats { font-size: 0.8rem; color: #718096; margin-bottom: 14px; }
+        .seats-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 4px; }
+        .seats-fill { height: 100%; border-radius: 3px; background: #2b6cb0; }
+        .book-btn {
+            width: 100%; padding: 11px; background: #2b6cb0; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600;
+            transition: background 0.2s;
         }
+        .book-btn:hover { background: #2c5282; }
+        .book-btn:disabled { background: #a0aec0; cursor: not-allowed; }
 
-        .nav-links a:hover {
-            color: #2b6cb0;
-        }
+        /* Booking Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; padding: 2rem; border-radius: 12px; width: 420px; }
+        .modal h3 { font-size: 1.4rem; color: #1a365d; margin-bottom: 1.5rem; }
+        .modal-info p { font-size: 0.9rem; color: #4a5568; margin-bottom: 6px; }
+        .modal-price { font-size: 1.5rem; font-weight: 700; color: #2b6cb0; margin: 1rem 0; }
+        .seats-input { display: flex; align-items: center; gap: 12px; margin: 1rem 0; }
+        .seats-input label { font-weight: 600; color: #4a5568; }
+        .seats-input input { width: 70px; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; text-align: center; }
+        .modal-btns { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn-confirm { flex: 1; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+        .btn-cancel  { flex: 1; padding: 12px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-confirm:hover { background: #2c5282; }
 
+        #msg { position: fixed; bottom: 20px; right: 20px; padding: 14px 22px; border-radius: 10px; font-weight: 600; z-index: 200; display: none; }
+        .msg-success { background: #c6f6d5; color: #276749; }
+        .msg-error   { background: #fed7d7; color: #c53030; }
 
-    .login-btn, .signup-btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .login-btn {
-      background: #B8E2F4;
-      color: white;
-    }
-
-    .signup-btn {
-      background: #B7E892;
-      color: white;
-    }
-
-    .login-btn:hover {
-      background: #2c5282;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .signup-btn:hover {
-      background: #2f855a;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ebf4ff 0%, #f5f0ff 100%);
-      color: #2d3748;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Hero Section */
-    .hero {
-      height: 100vh;
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                  url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      color: white;
-      text-align: center;
-    }
-
-    .hero-content {
-      width: 100%;
-      padding: 2rem;
-    }
-
-    .hero h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      animation: slideUp 1s ease-out;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      margin-bottom: 2rem;
-      animation: slideUp 1s ease-out 0.2s forwards;
-      opacity: 0;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Main Content Styles */
-    main {
-      padding: 40px 0;
-    }
-
-    main h2 {
-      font-size: 3.5rem;
-      font-weight: 600;
-  font-style:Narrow Italic;
- font-family:Segoe Print;
-      text-align: center;
-      margin-bottom: 40px;
-      color:#C19A6B;
-    }
-
-    /* Categories Grid */
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* Category Card Styles */
-    .category-card {
-      background-color: #F3E9DC;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .category-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .category-card .icon {
-      margin-bottom: 16px;
-      font-size: 2rem;
-    }
-
-    .category-card h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 8px;
-    }
-
-    .category-card p {
-      color: #718096;
-      font-size: 0.875rem;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .modal-header h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #2d3748;
-      margin: 0;
-    }
-
-    .close-button {
-      font-size: 1.5rem;
-      color: #718096;
-      cursor: pointer;
-      transition: color 0.2s ease;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .close-button:hover {
-      color: #2d3748;
-      background-color: #f7fafc;
-    }
-
-    .modal-body {
-      padding: 24px;
-      overflow-y: auto;
-      max-height: calc(90vh - 80px);
-    }
-
-    /* Event Types Grid */
-    .event-types {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 24px;
-    }
-
-    /* Event Type Card Styles */
-    .event-type-card {
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .event-type-card:hover {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      transform: translateY(-5px);
-    }
-
-    .event-image {
-      height: 180px;
-      overflow: hidden;
-    }
-
-    .event-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .event-type-card:hover .event-image img {
-      transform: scale(1.1);
-    }
-
-    .event-type-card h3 {
-      padding: 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #2d3748;
-      text-align: center;
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-
-    /* Responsive Styles */
-    @media (max-width: 768px) {
-      .categories {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      }
-      
-      .event-types {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      }
-      
-      .modal-content {
-        max-width: 95%;
-      }
-
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-
-      .nav-links {
-        gap: 1rem;
-      }
-
-      .logo span {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-      
-      .categories {
-        grid-template-columns: 1fr;
-      }
-      
-      .event-types {
-        grid-template-columns: 1fr;
-      }
-      
-      .modal-header h2 {
-        font-size: 1.25rem;
-      }
-
-      .nav-links a:not(.login-btn):not(.signup-btn) {
-        display: none;
-      }
-
-      .logo span {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
+        .empty-state { text-align: center; padding: 4rem; color: #a0aec0; grid-column: 1/-1; }
+        .my-bookings-link { display: inline-block; margin-top: 1.5rem; padding: 10px 22px; background: #2b6cb0; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    </style>
 </head>
 <body>
-  <nav>
-    <div class="logo">
-<img src="logo.jpg" >
-<span>EventSpark</span>
-     
-    </div>
+<nav>
+    <div class="logo"><img src="logo.jpg" alt="Logo"><span>EventSpark</span></div>
     <div class="nav-links">
-      <a href="home.html">Home</a>
-  
-            <a href="about_us.html">About Us</a>
-            <a href="contact.html">Contact</a>
-	<a href="select_role.html" class="signup-btn">Sign up</a>
-	<a href="finallogin.html" class="login-btn">Login</a>
+        <a href="home.html">Home</a>
+        <a href="event.html">Events</a>
+        <a href="about_us.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <span id="nav-user"></span>
     </div>
-  </nav>
+</nav>
 
-  <div class="hero">
-    <div class="hero-content">
-      
-     
-      <main>
-<BR>
-<BR>
-<BR>
-        <h2> Select an Event Category</h2>
-        
-        <div class="categories">
-          <!-- Social Gatherings -->
-          <div class="category-card" id="social-gatherings">
-            <div class="icon">
-              <i class="fas fa-users" style="color: #4299e1;">👥</i>
-            </div>
-            <h3>Social Gatherings</h3>
-            <p>Click to view event types</p>
-          </div>
+<div class="main">
+    <div class="page-header">
+        <h1>Upcoming Events</h1>
+        <p>Discover and book amazing events near you</p>
+    </div>
 
-          <!-- Parties -->
-          <div class="category-card" id="parties">
-            <div class="icon">
-              <i class="fas fa-music" style="color: #9f7aea;">🎵</i>
-            </div>
-            <h3>Parties</h3>
-            <p>Click to view event types</p>
-          </div>
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterEvents('all', this)">All</button>
+        <button class="filter-btn" onclick="filterEvents('weddings', this)">💍 Weddings</button>
+        <button class="filter-btn" onclick="filterEvents('corporate', this)">💼 Corporate</button>
+        <button class="filter-btn" onclick="filterEvents('concerts', this)">🎵 Concerts</button>
+        <button class="filter-btn" onclick="filterEvents('social', this)">🎉 Social</button>
+        <button class="filter-btn" onclick="filterEvents('sports', this)">⚽ Sports</button>
+        <input type="text" class="search-bar" id="search-bar" placeholder="🔍 Search events..." oninput="searchEvents()">
+    </div>
 
-          <!-- Corporate Events -->
-          <div class="category-card" id="corporate-events">
-            <div class="icon">
-              <i class="fas fa-briefcase" style="color: #4a5568;">💼</i>
-            </div>
-            <h3>Corporate Events</h3>
-            <p>Click to view event types</p>
-          </div>
+    <div class="events-grid" id="events-grid">
+        <div class="empty-state"><p>Loading events...</p></div>
+    </div>
+</div>
 
-          <!-- Classes & Workshops -->
-          <div class="category-card" id="classes-workshops">
-            <div class="icon">
-              <i class="fas fa-book-open" style="color: #48bb78;">📚</i>
-            </div>
-            <h3>Classes & Workshops</h3>
-            <p>Click to view event types</p>
-          </div>
-
-          <!-- Festivals -->
-          <div class="category-card" id="festivals">
-            <div class="icon">
-              <i class="fas fa-star" style="color: #ecc94b;">⭐</i>
-            </div>
-            <h3>Festivals</h3>
-            <p>Click to view event types</p>
-          </div>
-
-         
+<!-- Booking Modal -->
+<div class="modal-overlay" id="book-modal">
+    <div class="modal">
+        <h3>Book Event</h3>
+        <div class="modal-info">
+            <p><strong id="m-title"></strong></p>
+            <p>📍 <span id="m-venue"></span></p>
+            <p>📅 <span id="m-date"></span></p>
         </div>
-      </main>
-    </div>
-  </div>
-
-  <!-- Modal Overlays for Each Category -->
-  <!-- Social Gatherings Modal -->
-  <div class="modal" id="social-gatherings-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Social Gatherings</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="wedding.jpeg" alt="Wedding">
-            </div>
-            <h3>Wedding</h3>
-          </div>
-     
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="birthday.jpg" alt="Birthday">
-            </div>
-            <h3>Birthday</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="anniversary.jpg" alt="Anniversary">
-            </div>
-            <h3>Anniversary</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1482575832494-771f74bf6857?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Holiday Party">
-            </div>
-            <h3>Holiday Party</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="babyshower.jpg" alt="Baby Shower">
-            </div>
-            <h3>Baby Shower</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="bridetobe.jpg" alt="Bride & Groom Party">
-            </div>
-            <h3>Bride & Groom Party</h3>
-          </div>
+        <div class="modal-price" id="m-price"></div>
+        <div class="seats-input">
+            <label>Seats:</label>
+            <input type="number" id="m-seats" value="1" min="1" max="10" onchange="updateTotal()">
+            <span id="m-total" style="font-weight:700;color:#2b6cb0"></span>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Parties Modal -->
-  <div class="modal" id="parties-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Parties</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Concert">
-            </div>
-            <h3>Concert</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Birthday">
-            </div>
-            <h3>Birthday</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Graduation">
-            </div>
-            <h3>Graduation</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="house.jpg" alt="Housewarming">
-            </div>
-            <h3>Housewarming</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Retirement Party">
-            </div>
-            <h3>Retirement Party</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="halloween.jpeg" alt="Halloween Party">
-            </div>
-            <h3>Halloween Party</h3>
-          </div>
+        <div class="modal-btns">
+            <button class="btn-confirm" onclick="confirmBooking()">Confirm Booking</button>
+            <button class="btn-cancel"  onclick="closeBookModal()">Cancel</button>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <!-- Corporate Events Modal -->
-  <div class="modal" id="corporate-events-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Corporate Events</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Conference">
-            </div>
-            <h3>Conference</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1558008258-3256797b43f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Seminar">
-            </div>
-            <h3>Seminar</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="product.jpeg" alt="Product Launch">
-            </div>
-            <h3>Product Launch</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div id="msg"></div>
 
-  <!-- Classes & Workshops Modal -->
-  <div class="modal" id="classes-workshops-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Classes & Workshops</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Educational Classes">
-            </div>
-            <h3>Educational Classes</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Skill-based Classes">
-            </div>
-            <h3>Skill-based Classes</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="dance.jpg" alt="Dance Workshop">
-            </div>
-            <h3>Dance Workshop</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="music.jpeg" alt="Music Workshop">
-            </div>
-            <h3>Music Workshop</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="creative.jpeg" alt="Creative Workshop">
-            </div>
-            <h3>Creative Workshop</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<script>
+    let allEvents = [];
+    let currentFilter = 'all';
+    let selectedEvent = null;
+    let isLoggedIn = false;
+    let userRole = '';
 
-  <!-- Festivals Modal -->
-  <div class="modal" id="festivals-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Festivals</h2>
-        <span class="close-button">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="event-types">
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="diwali.jpeg" alt="Diwali">
-            </div>
-            <h3>Diwali</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="christmas.jpeg" alt="Christmas">
-            </div>
-            <h3>Christmas</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="holi.jpeg" alt="Holi">
-            </div>
-            <h3>Holi</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="newyear.jpeg" alt="New Year">
-            </div>
-            <h3>New Year</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="navratri.jpeg" alt="Navratri">
-            </div>
-            <h3>Navratri</h3>
-          </div>
-          <div class="event-type-card">
-            <div class="event-image">
-              <img src="cultural.jpeg" alt="Cultural Event">
-            </div>
-            <h3>Cultural Event</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    function showMsg(text, type = 'success') {
+        const m = document.getElementById('msg');
+        m.textContent = text;
+        m.className = type === 'success' ? 'msg-success' : 'msg-error';
+        m.style.display = 'block';
+        setTimeout(() => m.style.display = 'none', 3500);
+    }
 
-      </div>
-  </div>
+    async function loadSession() {
+        const res  = await fetch('/session-info');
+        const data = await res.json();
+        isLoggedIn = data.loggedIn;
+        userRole   = data.loggedIn ? data.user.role : '';
+        const navUser = document.getElementById('nav-user');
+        if (data.loggedIn) {
+            navUser.innerHTML = `<span class="user-badge">👤 ${data.user.name}</span>
+                <a href="/my-bookings-page.html">My Bookings</a>
+                <a href="/logout" class="logout-link">Logout</a>`;
+        } else {
+            navUser.innerHTML = `<a href="finallogin.html" style="background:#2b6cb0;color:white;padding:7px 16px;border-radius:8px;font-weight:600">Login</a>`;
+        }
+    }
 
-  <script>
-    // Simple JavaScript to handle modal functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get all category cards
-      const categoryCards = document.querySelectorAll('.category-card');
-      const closeButtons = document.querySelectorAll('.close-button');
-      const modals = document.querySelectorAll('.modal');
-      
-      // Add click event to each category card
-      categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
-          const modalId = this.id + '-modal';
-          document.getElementById(modalId).style.display = 'flex';
+    async function loadEvents(category = 'all', search = '') {
+        let url = '/events?';
+        if (category !== 'all') url += `category=${category}&`;
+        if (search) url += `search=${encodeURIComponent(search)}`;
+
+        const res  = await fetch(url);
+        const data = await res.json();
+        allEvents  = data.events || [];
+        renderEvents(allEvents);
+    }
+
+    function renderEvents(events) {
+        const grid = document.getElementById('events-grid');
+        if (!events.length) {
+            grid.innerHTML = '<div class="empty-state"><p>No events found.</p></div>';
+            return;
+        }
+        grid.innerHTML = events.map(e => {
+            const pct = Math.round((e.available_seats / e.total_seats) * 100);
+            const soldOut = e.available_seats === 0;
+            return `
+            <div class="event-card">
+                <div class="card-banner ${e.category}"></div>
+                <div class="card-body">
+                    <div class="card-category">${e.category}</div>
+                    <div class="card-title">${e.title}</div>
+                    <div class="card-meta">
+                        <span>📅 ${new Date(e.event_date).toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})} &nbsp; ⏰ ${e.event_time}</span>
+                        <span>📍 ${e.venue}</span>
+                        <span>🏢 ${e.manager_name}${e.company ? ' · '+e.company : ''}</span>
+                    </div>
+                    <div class="card-price">₹${parseFloat(e.price).toLocaleString('en-IN')} <span style="font-size:0.85rem;font-weight:400;color:#718096">/ seat</span></div>
+                    <div class="card-seats">
+                        ${soldOut ? '🔴 Sold Out' : `🟢 ${e.available_seats} of ${e.total_seats} seats available`}
+                        <div class="seats-bar"><div class="seats-fill" style="width:${pct}%"></div></div>
+                    </div>
+                    <button class="book-btn" ${soldOut ? 'disabled' : ''} onclick="openBookModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
+                        ${soldOut ? 'Sold Out' : 'Book Now'}
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function filterEvents(cat, btn) {
+        currentFilter = cat;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadEvents(cat, document.getElementById('search-bar').value);
+    }
+
+    let searchTimer;
+    function searchEvents() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            loadEvents(currentFilter, document.getElementById('search-bar').value);
+        }, 350);
+    }
+
+    function openBookModal(event) {
+        if (!isLoggedIn) {
+            if (confirm('Please login to book events. Go to login page?'))
+                window.location = '/finallogin.html';
+            return;
+        }
+        if (userRole !== 'customer') {
+            showMsg('Only customers can book events.', 'error'); return;
+        }
+        selectedEvent = event;
+        document.getElementById('m-title').textContent = event.title;
+        document.getElementById('m-venue').textContent = event.venue;
+        document.getElementById('m-date').textContent  = new Date(event.event_date).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) + ' · ' + event.event_time;
+        document.getElementById('m-price').textContent = '₹' + parseFloat(event.price).toLocaleString('en-IN') + ' / seat';
+        document.getElementById('m-seats').max = Math.min(10, event.available_seats);
+        document.getElementById('m-seats').value = 1;
+        updateTotal();
+        document.getElementById('book-modal').classList.add('active');
+    }
+
+    function updateTotal() {
+        if (!selectedEvent) return;
+        const seats = parseInt(document.getElementById('m-seats').value) || 1;
+        const total = seats * parseFloat(selectedEvent.price);
+        document.getElementById('m-total').textContent = '= ₹' + total.toLocaleString('en-IN');
+    }
+
+    function closeBookModal() { document.getElementById('book-modal').classList.remove('active'); }
+
+    async function confirmBooking() {
+        const seats = parseInt(document.getElementById('m-seats').value) || 1;
+        const res  = await fetch('/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_id: selectedEvent.event_id, seats_booked: seats })
         });
-      });
-      
-      // Add click event to close buttons
-      closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const modal = this.closest('.modal');
-          modal.style.display = 'none';
-        });
-      });
-      
-      // Close modal when clicking outside of modal content
-      window.addEventListener('click', function(event) {
-        modals.forEach(modal => {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-      });
-    });
-  </script>
+        const data = await res.json();
+        if (data.success) {
+            showMsg(`🎉 Booked ${seats} seat(s)! Total: ₹${data.total_amount.toLocaleString('en-IN')}`);
+            closeBookModal();
+            loadEvents(currentFilter, document.getElementById('search-bar').value);
+        } else {
+            showMsg(data.message || 'Booking failed.', 'error');
+        }
+    }
+
+    loadSession().then(() => loadEvents());
+</script>
 </body>
 </html>

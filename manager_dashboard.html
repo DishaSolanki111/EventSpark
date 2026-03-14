@@ -5,102 +5,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Dashboard - EventSpark</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f0f4f8; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f7f8fc; min-height: 100vh; }
+
+        /* ── NAV ── */
         nav {
-            background: white; padding: 1rem 2rem;
+            background-color: white;
+            padding: 1rem 2rem;
+            position: fixed; top: 0; left: 0; width: 100%;
+            z-index: 100;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: fixed; top: 0; width: 100%; z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
         }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 55px; }
-        .logo span { font-size: 2rem; font-weight: bold; color: #1a365d; }
-        .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-        .nav-right a { text-decoration: none; color: #4a5568; font-weight: 500; }
-        .logout-btn { padding: 8px 18px; background: #e53e3e; color: white; border: none; border-radius: 6px; cursor: pointer; }
-        .logout-btn:hover { background: #c53030; }
-        .main { padding: 100px 2rem 2rem; max-width: 1100px; margin: 0 auto; }
-        .welcome-card { background: linear-gradient(135deg, #1a365d, #2b6cb0); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
-        .welcome-card h2 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
-        .stat-card .number { font-size: 2.5rem; font-weight: bold; color: #2b6cb0; }
-        .stat-card .label { color: #718096; font-size: 0.9rem; margin-top: 4px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .section-header h3 { font-size: 1.4rem; color: #1a365d; }
-        .create-btn { padding: 10px 22px; background: #2b6cb0; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; }
-        .create-btn:hover { background: #2c5282; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; justify-content: center; align-items: center; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: white; padding: 2rem; border-radius: 12px; width: 520px; max-height: 90vh; overflow-y: auto; }
-        .modal h3 { margin-bottom: 1.5rem; font-size: 1.4rem; color: #1a365d; }
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; font-size: 0.85rem; color: #4a5568; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; }
-        .form-group textarea { resize: vertical; height: 90px; }
-        .modal-btns { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        .btn-primary { flex: 1; padding: 11px; background: #2b6cb0; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
-        .btn-cancel  { flex: 1; padding: 11px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
-        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-        .event-card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
-        .event-card-header { padding: 1.2rem 1.2rem 0.8rem; border-bottom: 1px solid #e2e8f0; }
-        .event-card-header h4 { font-size: 1.1rem; color: #1a365d; margin-bottom: 4px; }
-        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; }
+        .logo { display: flex; align-items: center; }
+        .logo img { height: 70px; margin-right: 10px; }
+        .logo span { font-size: 3.0rem; font-weight: bold; color: #1a365d; font-family: News706 BT, serif; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: #4a5568; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #2b6cb0; }
+        .logout-btn {
+            padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600;
+            background: #fff5f5; color: #c53030; border: 1.5px solid #fed7d7;
+            text-decoration: none; transition: all 0.25s; font-family: Cambria Math, serif;
+        }
+        .logout-btn:hover { background: #c53030; color: white; border-color: #c53030; }
+        .login-btn  { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; background: #B8E2F4; color: #1a365d; text-decoration: none; }
+        .signup-btn { padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; background: #B7E892; color: #1a365d; text-decoration: none; }
+        .user-name-badge { font-size: 0.9rem; font-weight: 600; color: #1a365d; font-family: Cambria Math, serif; }
+
+        /* ── HERO BANNER ── */
+        .dash-hero {
+            height: 220px;
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+                        url('homebac.jpeg') center/cover no-repeat;
+            display: flex; flex-direction: column;
+            align-items: flex-start; justify-content: flex-end;
+            padding: 2rem 3rem;
+            margin-top: 90px;
+        }
+        .dash-hero h1 {
+            font-family: Cooper, serif;
+            font-size: 2.4rem;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+        .dash-hero p { font-family: Cambria Math, serif; color: rgba(255,255,255,0.85); font-size: 1rem; }
+
+        /* ── MAIN ── */
+        .main { max-width: 1150px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+        /* ── STATS ── */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.6rem 1.8rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            border: 1px solid #e8edf5;
+            display: flex; align-items: center; gap: 1.2rem;
+        }
+        .stat-icon {
+            width: 56px; height: 56px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .stat-icon.blue   { background: #ebf8ff; }
+        .stat-icon.navy   { background: #e8f0fc; }
+        .stat-icon.green  { background: #f0fff4; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
+        .stat-label  { font-size: 0.85rem; color: #718096; font-family: Arial, sans-serif; margin-top: 2px; }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.3rem;
+        }
+        .section-header h2 {
+            font-family: Cooper, serif;
+            font-size: 1.6rem;
+            color: #1a365d;
+        }
+        .create-btn {
+            padding: 0.6rem 1.4rem;
+            background: #1a365d; color: white;
+            border: none; border-radius: 0.5rem;
+            font-size: 0.9rem; font-weight: 600;
+            font-family: Cambria Math, serif;
+            cursor: pointer; transition: background 0.25s;
+        }
+        .create-btn:hover { background: #2b6cb0; }
+
+        /* ── EVENTS GRID ── */
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+
+        .event-card {
+            background: white; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            border: 1px solid #e8edf5; overflow: hidden;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .event-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(26,54,93,0.12); }
+
+        .card-stripe { height: 6px; }
+        .card-stripe.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
+        .card-stripe.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
+        .card-stripe.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
+        .card-stripe.social    { background: linear-gradient(90deg,#22543d,#68d391); }
+        .card-stripe.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
+
+        .card-inner { padding: 1.3rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem; }
+        .card-title  { font-family: Cooper, serif; font-size: 1.1rem; color: #1a365d; flex: 1; }
+        .badge {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            padding: 3px 10px; border-radius: 20px; flex-shrink: 0; margin-left: 8px;
+            font-family: Arial, sans-serif; letter-spacing: 0.5px;
+        }
         .badge-upcoming  { background: #ebf8ff; color: #2b6cb0; }
         .badge-completed { background: #f0fff4; color: #276749; }
         .badge-cancelled { background: #fff5f5; color: #c53030; }
-        .event-card-body { padding: 1rem 1.2rem; font-size: 0.9rem; color: #4a5568; }
-        .event-card-body p { margin-bottom: 5px; }
-        .event-card-footer { padding: 0.8rem 1.2rem; display: flex; gap: 0.5rem; border-top: 1px solid #e2e8f0; }
-        .btn-sm { flex: 1; padding: 7px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+
+        .card-meta { display: flex; flex-direction: column; gap: 5px; margin-bottom: 1rem; }
+        .card-meta span { font-size: 0.855rem; font-family: Cambria Math, serif; color: #4a5568; }
+
+        .card-divider { height: 1px; background: #f0f0f0; margin-bottom: 1rem; }
+
+        .card-actions { display: flex; gap: 0.6rem; }
+        .btn-sm {
+            flex: 1; padding: 0.5rem 0;
+            border: none; border-radius: 0.4rem;
+            cursor: pointer; font-size: 0.85rem; font-weight: 600;
+            font-family: Cambria Math, serif; transition: opacity 0.2s;
+        }
+        .btn-sm:hover { opacity: 0.8; }
         .btn-view   { background: #ebf8ff; color: #2b6cb0; }
         .btn-delete { background: #fff5f5; color: #c53030; }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.48); z-index: 200;
+            justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white; border-radius: 14px;
+            padding: 2.2rem; width: 520px; max-width: 95vw;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.3s ease-out both;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.6rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;
+        }
+        .modal-header h2 { font-family: Cooper, serif; font-size: 1.5rem; color: #1a365d; }
+        .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #a0aec0; }
+        .modal-close:hover { color: #4a5568; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label {
+            display: block; font-size: 0.875rem; font-weight: 600;
+            color: #4a5568; margin-bottom: 0.4rem;
+            font-family: Cambria Math, serif;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 0.7rem 0.9rem;
+            border: 1px solid #e2e8f0; border-radius: 0.5rem;
+            font-size: 0.95rem; font-family: Cambria Math, serif;
+            outline: none; transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #2b6cb0; box-shadow: 0 0 0 3px rgba(43,108,176,0.1);
+        }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .modal-btns { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn-primary {
+            flex: 1; padding: 0.75rem;
+            background: #1a365d; color: white;
+            border: none; border-radius: 0.5rem;
+            font-size: 1rem; font-weight: 600;
+            font-family: Cambria Math, serif; cursor: pointer;
+            transition: background 0.25s;
+        }
+        .btn-primary:hover { background: #2b6cb0; }
+        .btn-secondary {
+            flex: 1; padding: 0.75rem;
+            background: #f0f4f8; color: #4a5568;
+            border: none; border-radius: 0.5rem;
+            font-family: Cambria Math, serif; cursor: pointer;
+        }
+        .btn-secondary:hover { background: #e2e8f0; }
+
+        /* Booking table in modal */
+        .booking-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .booking-table th {
+            background: #f7fafc; padding: 10px 12px;
+            text-align: left; font-size: 0.8rem;
+            color: #718096; font-family: Arial, sans-serif;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .booking-table td {
+            padding: 10px 12px; font-size: 0.875rem;
+            font-family: Cambria Math, serif; color: #2d3748;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 28px; right: 28px;
+            padding: 1rem 1.5rem; border-radius: 10px;
+            font-family: Cambria Math, serif; font-size: 0.95rem; font-weight: 600;
+            z-index: 999; display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .toast-success { background: #f0fff4; color: #276749; border-left: 4px solid #38a169; }
+        .toast-error   { background: #fff5f5; color: #c53030; border-left: 4px solid #e53e3e; }
+
         .empty-state { text-align: center; padding: 3rem; color: #a0aec0; grid-column: 1/-1; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f7fafc; padding: 12px 16px; text-align: left; font-size: 0.85rem; color: #4a5568; }
-        td { padding: 12px 16px; border-top: 1px solid #e2e8f0; font-size: 0.9rem; color: #2d3748; }
-        #msg { position: fixed; bottom: 20px; right: 20px; padding: 14px 22px; border-radius: 10px; font-weight: 600; z-index: 200; display: none; }
-        .msg-success { background: #c6f6d5; color: #276749; }
-        .msg-error   { background: #fed7d7; color: #c53030; }
+        .empty-state p { font-family: Cambria Math, serif; font-size: 1rem; }
     </style>
 </head>
 <body>
-<nav>
-    <div class="logo"><img src="logo.jpg" alt="Logo"><span>EventSpark</span></div>
-    <div class="nav-right">
-        <a href="home.html">Home</a>
-        <button class="logout-btn" onclick="window.location='/logout'">Logout</button>
-    </div>
-</nav>
 
+<!-- NAV -->
+<script src="header.js"></script>
+
+<!-- HERO -->
+<div class="dash-hero">
+    <h1 id="welcome-msg">Manager Dashboard</h1>
+    <p>Create events, track bookings, and manage your portfolio</p>
+</div>
+
+<!-- MAIN -->
 <div class="main">
-    <div class="welcome-card">
-        <h2 id="welcome-msg">Welcome back! 👋</h2>
-        <p>Manage your events and track bookings from your dashboard.</p>
+
+    <!-- STATS -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon blue">📋</div>
+            <div>
+                <div class="stat-number" id="stat-total">0</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon navy">🗓️</div>
+            <div>
+                <div class="stat-number" id="stat-upcoming">0</div>
+                <div class="stat-label">Upcoming Events</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">🎫</div>
+            <div>
+                <div class="stat-number" id="stat-bookings">0</div>
+                <div class="stat-label">Seats Booked</div>
+            </div>
+        </div>
     </div>
-    <div class="stats">
-        <div class="stat-card"><div class="number" id="stat-total">0</div><div class="label">Total Events</div></div>
-        <div class="stat-card"><div class="number" id="stat-upcoming">0</div><div class="label">Upcoming Events</div></div>
-        <div class="stat-card"><div class="number" id="stat-bookings">0</div><div class="label">Seats Booked</div></div>
-    </div>
+
+    <!-- EVENTS -->
     <div class="section-header">
-        <h3>My Events</h3>
-        <button class="create-btn" onclick="openModal()">+ Create New Event</button>
+        <h2>My Events</h2>
+        <button class="create-btn" onclick="openCreateModal()">+ Create New Event</button>
     </div>
+
     <div class="events-grid" id="events-grid">
         <div class="empty-state"><p>Loading events...</p></div>
     </div>
+
 </div>
 
-<div class="modal-overlay" id="modal">
-    <div class="modal" id="modal-inner">
-        <h3>Create New Event</h3>
-        <div class="form-group"><label>Event Title *</label><input type="text" id="f-title" placeholder="e.g. Grand Wedding Expo"></div>
-        <div class="form-group"><label>Description</label><textarea id="f-desc" placeholder="Describe your event..."></textarea></div>
-        <div class="form-group"><label>Category *</label>
+<!-- CREATE MODAL -->
+<div class="modal-overlay" id="create-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Create New Event</h2>
+            <button class="modal-close" onclick="closeModal('create-modal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Event Title *</label>
+            <input type="text" id="f-title" placeholder="e.g. Grand Wedding Expo 2026">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="f-desc" placeholder="Describe your event..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Category *</label>
             <select id="f-category">
-                <option value="">Select Category</option>
+                <option value="">Select Specialization</option>
                 <option value="weddings">Weddings</option>
                 <option value="corporate">Corporate Events</option>
                 <option value="concerts">Concerts & Festivals</option>
@@ -108,155 +313,220 @@
                 <option value="sports">Sports Events</option>
             </select>
         </div>
-        <div class="form-group"><label>Venue *</label><input type="text" id="f-venue" placeholder="e.g. Grand Ballroom, Mumbai"></div>
-        <div class="form-group"><label>Event Date *</label><input type="date" id="f-date"></div>
-        <div class="form-group"><label>Event Time *</label><input type="time" id="f-time"></div>
-        <div class="form-group"><label>Total Seats *</label><input type="number" id="f-seats" min="1" placeholder="e.g. 200"></div>
-        <div class="form-group"><label>Price per Seat (₹) *</label><input type="number" id="f-price" min="0" step="0.01" placeholder="e.g. 499"></div>
+        <div class="form-group">
+            <label>Venue *</label>
+            <input type="text" id="f-venue" placeholder="e.g. Grand Ballroom, Mumbai">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Event Date *</label>
+                <input type="date" id="f-date">
+            </div>
+            <div class="form-group">
+                <label>Event Time *</label>
+                <input type="time" id="f-time">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Total Seats *</label>
+                <input type="number" id="f-seats" min="1" placeholder="e.g. 200">
+            </div>
+            <div class="form-group">
+                <label>Price per Seat (₹) *</label>
+                <input type="number" id="f-price" min="0" step="0.01" placeholder="e.g. 499">
+            </div>
+        </div>
         <div class="modal-btns">
-            <button class="btn-primary" onclick="createEvent()">Create Event</button>
-            <button class="btn-cancel"  onclick="closeModal()">Cancel</button>
+            <button class="btn-primary"    onclick="createEvent()">Create Event</button>
+            <button class="btn-secondary"  onclick="closeModal('create-modal')">Cancel</button>
         </div>
     </div>
 </div>
 
-<div id="msg"></div>
+<!-- BOOKINGS MODAL -->
+<div class="modal-overlay" id="bookings-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="bm-title">Event Bookings</h2>
+            <button class="modal-close" onclick="closeModal('bookings-modal')">✕</button>
+        </div>
+        <div id="bm-content"></div>
+        <div class="modal-btns" style="margin-top:1.5rem">
+            <button class="btn-secondary" onclick="closeModal('bookings-modal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
     let myEvents = [];
 
-    function showMsg(text, type = 'success') {
-        const m = document.getElementById('msg');
-        m.textContent = text;
-        m.className = type === 'success' ? 'msg-success' : 'msg-error';
-        m.style.display = 'block';
-        setTimeout(() => m.style.display = 'none', 3000);
+    function showToast(text, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = text;
+        t.className = type === 'success' ? 'toast-success' : 'toast-error';
+        t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3200);
     }
 
-    function openModal()  {
-        document.getElementById('modal-inner').innerHTML = `
-            <h3>Create New Event</h3>
-            <div class="form-group"><label>Event Title *</label><input type="text" id="f-title" placeholder="e.g. Grand Wedding Expo"></div>
-            <div class="form-group"><label>Description</label><textarea id="f-desc" placeholder="Describe your event..."></textarea></div>
-            <div class="form-group"><label>Category *</label>
-                <select id="f-category">
-                    <option value="">Select Category</option>
-                    <option value="weddings">Weddings</option>
-                    <option value="corporate">Corporate Events</option>
-                    <option value="concerts">Concerts & Festivals</option>
-                    <option value="social">Social Gatherings</option>
-                    <option value="sports">Sports Events</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Venue *</label><input type="text" id="f-venue"></div>
-            <div class="form-group"><label>Event Date *</label><input type="date" id="f-date"></div>
-            <div class="form-group"><label>Event Time *</label><input type="time" id="f-time"></div>
-            <div class="form-group"><label>Total Seats *</label><input type="number" id="f-seats" min="1"></div>
-            <div class="form-group"><label>Price per Seat (₹) *</label><input type="number" id="f-price" min="0" step="0.01"></div>
-            <div class="modal-btns">
-                <button class="btn-primary" onclick="createEvent()">Create Event</button>
-                <button class="btn-cancel"  onclick="closeModal()">Cancel</button>
-            </div>`;
-        document.getElementById('modal').classList.add('active');
-    }
-
-    function closeModal() { document.getElementById('modal').classList.remove('active'); }
+    function openCreateModal() { document.getElementById('create-modal').classList.add('active'); }
+    function closeModal(id)    { document.getElementById(id).classList.remove('active'); }
 
     async function loadSession() {
-        const res = await fetch('/session-info');
+        const res  = await fetch('/session-info');
         const data = await res.json();
         if (!data.loggedIn || data.user.role !== 'manager') {
             window.location = '/finallogin.html'; return;
         }
-        document.getElementById('welcome-msg').textContent = `Welcome back, ${data.user.name}! 👋`;
+        document.getElementById('welcome-msg').textContent = `Welcome back, ${data.user.name}`;
     }
 
     async function loadEvents() {
-        const res = await fetch('/my-events');
+        const res  = await fetch('/my-events');
         const data = await res.json();
         if (!data.success) return;
         myEvents = data.events;
+
         document.getElementById('stat-total').textContent    = myEvents.length;
         document.getElementById('stat-upcoming').textContent = myEvents.filter(e => e.status === 'upcoming').length;
-        document.getElementById('stat-bookings').textContent = myEvents.reduce((a, e) => a + (e.total_seats - e.available_seats), 0);
-        renderEvents();
-    }
+        document.getElementById('stat-bookings').textContent =
+            myEvents.reduce((a, e) => a + (e.total_seats - e.available_seats), 0);
 
-    function renderEvents() {
         const grid = document.getElementById('events-grid');
         if (!myEvents.length) {
             grid.innerHTML = '<div class="empty-state"><p>No events yet. Create your first event!</p></div>';
             return;
         }
-        grid.innerHTML = myEvents.map(e => `
+
+        grid.innerHTML = myEvents.map(e => {
+            const dateStr = new Date(e.event_date).toLocaleDateString('en-IN',
+                {day:'2-digit', month:'short', year:'numeric'});
+            const booked  = e.total_seats - e.available_seats;
+            return `
             <div class="event-card">
-                <div class="event-card-header">
-                    <h4>${e.title}</h4>
-                    <span class="badge badge-${e.status}">${e.status}</span>
+                <div class="card-stripe ${e.category}"></div>
+                <div class="card-inner">
+                    <div class="card-header">
+                        <div class="card-title">${e.title}</div>
+                        <span class="badge badge-${e.status}">${e.status}</span>
+                    </div>
+                    <div class="card-meta">
+                        <span>📅 ${dateStr} &nbsp;·&nbsp; ⏰ ${e.event_time}</span>
+                        <span>📍 ${e.venue}</span>
+                        <span>🎫 ${e.available_seats}/${e.total_seats} seats · ${booked} booked</span>
+                        <span>💰 ₹${parseFloat(e.price).toLocaleString('en-IN')} per seat</span>
+                    </div>
+                    <div class="card-divider"></div>
+                    <div class="card-actions">
+                        <button class="btn-sm btn-view"   onclick="viewBookings(${e.event_id},'${e.title.replace(/'/g,"\\'")}')">View Bookings</button>
+                        <button class="btn-sm btn-delete" onclick="deleteEvent(${e.event_id})">Delete Event</button>
+                    </div>
                 </div>
-                <div class="event-card-body">
-                    <p>📅 ${new Date(e.event_date).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})} &nbsp; ⏰ ${e.event_time}</p>
-                    <p>📍 ${e.venue}</p>
-                    <p>🎫 ${e.available_seats} / ${e.total_seats} seats</p>
-                    <p>💰 ₹${parseFloat(e.price).toLocaleString('en-IN')}</p>
-                </div>
-                <div class="event-card-footer">
-                    <button class="btn-sm btn-view"   onclick="viewBookings(${e.event_id},'${e.title.replace(/'/g,"\\'")}')">Bookings</button>
-                    <button class="btn-sm btn-delete" onclick="deleteEvent(${e.event_id})">Delete</button>
-                </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     async function createEvent() {
         const payload = {
-            title: document.getElementById('f-title').value.trim(),
+            title:       document.getElementById('f-title').value.trim(),
             description: document.getElementById('f-desc').value.trim(),
-            category: document.getElementById('f-category').value,
-            venue: document.getElementById('f-venue').value.trim(),
-            event_date: document.getElementById('f-date').value,
-            event_time: document.getElementById('f-time').value,
+            category:    document.getElementById('f-category').value,
+            venue:       document.getElementById('f-venue').value.trim(),
+            event_date:  document.getElementById('f-date').value,
+            event_time:  document.getElementById('f-time').value,
             total_seats: document.getElementById('f-seats').value,
-            price: document.getElementById('f-price').value
+            price:       document.getElementById('f-price').value
         };
         if (!payload.title || !payload.category || !payload.venue || !payload.event_date || !payload.event_time || !payload.total_seats || !payload.price)
-            return showMsg('Please fill all required fields.', 'error');
+            return showToast('Please fill all required fields.', 'error');
 
-        const res  = await fetch('/events/create', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const res  = await fetch('/events/create', {
+            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+        });
         const data = await res.json();
-        if (data.success) { showMsg('Event created!'); closeModal(); loadEvents(); }
-        else showMsg(data.message || 'Failed.', 'error');
+        if (data.success) {
+            showToast('Event created successfully!');
+            closeModal('create-modal');
+            // clear fields
+            ['f-title','f-desc','f-venue','f-date','f-time','f-seats','f-price']
+                .forEach(id => document.getElementById(id).value = '');
+            document.getElementById('f-category').value = '';
+            loadEvents();
+        } else showToast(data.message || 'Failed to create event.', 'error');
     }
 
     async function deleteEvent(id) {
-        if (!confirm('Delete this event?')) return;
+        if (!confirm('Are you sure you want to delete this event? All bookings will also be removed.')) return;
         const res  = await fetch(`/events/${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (data.success) { showMsg('Event deleted.'); loadEvents(); }
-        else showMsg(data.message || 'Error.', 'error');
+        if (data.success) { showToast('Event deleted.'); loadEvents(); }
+        else showToast(data.message || 'Delete failed.', 'error');
     }
 
     async function viewBookings(event_id, title) {
+        document.getElementById('bm-title').textContent = `Bookings: ${title}`;
+        document.getElementById('bm-content').innerHTML = '<p style="font-family:Cambria Math,serif;color:#718096;text-align:center;padding:1rem">Loading...</p>';
+        document.getElementById('bookings-modal').classList.add('active');
+
         const res  = await fetch(`/event-bookings/${event_id}`);
         const data = await res.json();
-        if (!data.success) return showMsg('Could not load bookings.', 'error');
-        const rows = data.bookings.length
-            ? data.bookings.map(b => `<tr><td>#${b.booking_id}</td><td>${b.customer_name}</td><td>${b.customer_email}</td><td>${b.seats_booked}</td><td>₹${parseFloat(b.total_amount).toLocaleString('en-IN')}</td><td><span class="badge badge-${b.booking_status}">${b.booking_status}</span></td></tr>`).join('')
-            : '<tr><td colspan="6" style="text-align:center;color:#a0aec0">No bookings yet.</td></tr>';
 
-        document.getElementById('modal-inner').innerHTML = `
-            <h3>Bookings: ${title}</h3>
-            <div style="overflow-x:auto;margin-top:1rem">
-                <table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Seats</th><th>Amount</th><th>Status</th></tr></thead>
-                <tbody>${rows}</tbody></table>
-            </div>
-            <div class="modal-btns" style="margin-top:1rem">
-                <button class="btn-cancel" style="flex:0;padding:10px 24px" onclick="closeModal();loadEvents()">Close</button>
+        if (!data.success) {
+            document.getElementById('bm-content').innerHTML = '<p style="color:#c53030;font-family:Cambria Math,serif">Could not load bookings.</p>';
+            return;
+        }
+        if (!data.bookings.length) {
+            document.getElementById('bm-content').innerHTML = '<p style="text-align:center;color:#a0aec0;font-family:Cambria Math,serif;padding:1.5rem">No bookings yet for this event.</p>';
+            return;
+        }
+        document.getElementById('bm-content').innerHTML = `
+            <div style="overflow-x:auto">
+                <table class="booking-table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th><th>Customer</th><th>Email</th>
+                            <th>Seats</th><th>Amount</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.bookings.map(b => `
+                        <tr>
+                            <td>#${b.booking_id}</td>
+                            <td>${b.customer_name}</td>
+                            <td>${b.customer_email}</td>
+                            <td>${b.seats_booked}</td>
+                            <td>₹${parseFloat(b.total_amount).toLocaleString('en-IN')}</td>
+                            <td><span class="badge badge-${b.booking_status}">${b.booking_status}</span></td>
+                        </tr>`).join('')}
+                    </tbody>
+                </table>
             </div>`;
-        document.getElementById('modal').classList.add('active');
     }
 
-    loadSession();
-    loadEvents();
+    // ── Init: wait for DOM then check session and load data ──
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res  = await fetch('/session-info');
+            const data = await res.json();
+
+            if (!data.loggedIn || data.user.role !== 'manager') {
+                showToast('Please login as a manager first.', 'error');
+                setTimeout(() => window.location = '/finallogin.html', 1500);
+                return;
+            }
+            // Update welcome heading with real name
+            const wm = document.getElementById('welcome-msg');
+            if (wm) wm.textContent = `Welcome back, ${data.user.name}`;
+
+            // Now load events
+            await loadEvents();
+
+        } catch(e) {
+            showToast('Could not connect to server. Make sure Node.js is running.', 'error');
+        }
+    });
 </script>
 </body>
 </html>

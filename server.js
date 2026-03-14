@@ -43,6 +43,32 @@ db.connect((err) => {
         process.exit(1);
     }
     console.log('✅ Connected to MySQL - eventspark database');
+
+    // On startup: verify table structure
+    db.query("SHOW TABLES", (e, r) => {
+        if (e) return console.error('Cannot list tables:', e.message);
+        console.log('📋 Tables found:', r.map(t => Object.values(t)[0]).join(', '));
+    });
+    db.query("SELECT COUNT(*) AS c FROM events",    (e,r) => { if(!e) console.log(`📊 Events   : ${r[0].c}`); });
+    db.query("SELECT COUNT(*) AS c FROM bookings",  (e,r) => { if(!e) console.log(`📊 Bookings : ${r[0].c}`); });
+    db.query("SELECT COUNT(*) AS c FROM customers", (e,r) => { if(!e) console.log(`📊 Customers: ${r[0].c}`); });
+    db.query("SELECT COUNT(*) AS c FROM managers",  (e,r) => { if(!e) console.log(`📊 Managers : ${r[0].c}`); });
+});
+
+// ── Debug route (remove after testing) ───────
+app.get('/debug-db', (req, res) => {
+    const result = {};
+    db.query('SELECT COUNT(*) AS c FROM events',    (e,r) => { result.events    = e ? e.message : r[0].c; });
+    db.query('SELECT COUNT(*) AS c FROM bookings',  (e,r) => { result.bookings  = e ? e.message : r[0].c; });
+    db.query('SELECT COUNT(*) AS c FROM customers', (e,r) => { result.customers = e ? e.message : r[0].c; });
+    db.query('SELECT COUNT(*) AS c FROM categories',(e,r) => { result.categories = e ? e.message : r[0].c; });
+    db.query('DESCRIBE events', (e,r) => {
+        result.event_columns = e ? e.message : r.map(c => c.Field).join(', ');
+        // Check if category_id column exists
+        result.has_category_id = !e && r.some(c => c.Field === 'category_id');
+        result.has_category_enum = !e && r.some(c => c.Field === 'category');
+        setTimeout(() => res.json(result), 300);
+    });
 });
 
 // ── Helper ──────────────────────────────────
@@ -103,20 +129,29 @@ app.post('/register-manager', async (req, res) => {
         return res.send('<script>alert("Phone number must be exactly 10 digits!"); history.back();</script>');
 
     try {
+        // Check email
         db.query('SELECT manager_id FROM managers WHERE email = ?', [email], async (err, rows) => {
             if (err) return res.send('<script>alert("Database error"); history.back();</script>');
             if (rows.length > 0)
                 return res.send('<script>alert("Email already registered! Please login."); window.location="finallogin.html";</script>');
 
-            const hashedPass = await bcrypt.hash(pass, 10);
-            db.query(
-                'INSERT INTO managers (fname, email, mob, company, experience, specialization, pass) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [fname, email, mob, company || '', experience || 0, specialization, hashedPass],
-                (err2) => {
-                    if (err2) return res.send('<script>alert("Registration failed: ' + err2.message + '"); history.back();</script>');
-                    res.send('<script>alert("Manager registration successful! Please login."); window.location="finallogin.html";</script>');
-                }
-            );
+            // Lookup category_id
+            db.query('SELECT category_id FROM categories WHERE category_name = ?', [specialization], async (err2, cats) => {
+                if (err2 || cats.length === 0)
+                    return res.send('<script>alert("Invalid specialization selected."); history.back();</script>');
+
+                const category_id = cats[0].category_id;
+                const hashedPass  = await bcrypt.hash(pass, 10);
+
+                db.query(
+                    'INSERT INTO managers (fname, email, mob, company, experience, category_id, pass) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [fname, email, mob, company || '', experience || 0, category_id, hashedPass],
+                    (err3) => {
+                        if (err3) return res.send('<script>alert("Registration failed: ' + err3.message + '"); history.back();</script>');
+                        res.send('<script>alert("Manager registration successful! Please login."); window.location="finallogin.html";</script>');
+                    }
+                );
+            });
         });
     } catch (e) {
         res.send('<script>alert("Server error"); history.back();</script>');
@@ -187,37 +222,62 @@ app.get('/session-info', (req, res) => {
 // ── Get All Events (public) ──────────────────
 app.get('/events', (req, res) => {
     const { category, search } = req.query;
-    let sql = `
-        SELECT e.*, m.fname AS manager_name, m.company
-        FROM events e
-        JOIN managers m ON e.manager_id = m.manager_id
-        WHERE e.status = 'upcoming'
-    `;
-    const params = [];
 
-    if (category && category !== 'all') {
-        sql += ' AND e.category = ?';
-        params.push(category);
-    }
-    if (search) {
-        sql += ' AND (e.title LIKE ? OR e.description LIKE ? OR e.venue LIKE ?)';
-        const like = `%${search}%`;
-        params.push(like, like, like);
-    }
-    sql += ' ORDER BY e.event_date ASC';
+    // Detect schema: new has category_id column, old has category ENUM
+    db.query("SHOW COLUMNS FROM events LIKE 'category_id'", (schemaErr, cols) => {
+        const hasNewSchema = !schemaErr && cols.length > 0;
+        console.log(`[GET /events] Schema: ${hasNewSchema ? 'NEW (category_id FK)' : 'OLD (category ENUM)'}`);
 
-    db.query(sql, params, (err, rows) => {
-        if (err) return res.status(500).json({ success: false, error: err.message });
-        res.json({ success: true, events: rows });
+        let sql, params = [];
+
+        if (hasNewSchema) {
+            // New schema: JOIN categories table
+            sql = `
+                SELECT e.*, c.category_name AS category, c.icon AS category_icon,
+                       m.fname AS manager_name, m.company
+                FROM events e
+                JOIN categories c ON e.category_id = c.category_id
+                JOIN managers   m ON e.manager_id  = m.manager_id
+                WHERE e.status = 'upcoming'
+            `;
+            if (category && category !== 'all') { sql += ' AND c.category_name = ?'; params.push(category); }
+        } else {
+            // Old schema: category is ENUM column directly on events
+            sql = `
+                SELECT e.*, e.category AS category, m.fname AS manager_name, m.company
+                FROM events e
+                JOIN managers m ON e.manager_id = m.manager_id
+                WHERE e.status = 'upcoming'
+            `;
+            if (category && category !== 'all') { sql += ' AND e.category = ?'; params.push(category); }
+        }
+
+        if (search) {
+            sql += ' AND (e.title LIKE ? OR e.description LIKE ? OR e.venue LIKE ?)';
+            const like = `%${search}%`;
+            params.push(like, like, like);
+        }
+        sql += ' ORDER BY e.event_date ASC';
+
+        db.query(sql, params, (err, rows) => {
+            if (err) {
+                console.error('[GET /events] DB Error:', err.message);
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            console.log(`[GET /events] Returned ${rows.length} events`);
+            res.json({ success: true, events: rows });
+        });
     });
 });
 
 // ── Get Single Event ─────────────────────────
 app.get('/events/:id', (req, res) => {
     const sql = `
-        SELECT e.*, m.fname AS manager_name, m.company, m.specialization
+        SELECT e.*, c.category_name AS category, c.icon AS category_icon,
+               m.fname AS manager_name, m.company
         FROM events e
-        JOIN managers m ON e.manager_id = m.manager_id
+        JOIN categories c ON e.category_id = c.category_id
+        JOIN managers   m ON e.manager_id  = m.manager_id
         WHERE e.event_id = ?
     `;
     db.query(sql, [req.params.id], (err, rows) => {
@@ -236,15 +296,22 @@ app.post('/events/create', isLoggedIn, (req, res) => {
     if (!title || !category || !venue || !event_date || !event_time || !total_seats || !price)
         return res.status(400).json({ success: false, message: 'All fields required.' });
 
-    db.query(
-        `INSERT INTO events (manager_id, title, description, category, venue, event_date, event_time, total_seats, available_seats, price)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [req.session.user.id, title, description || '', category, venue, event_date, event_time, total_seats, total_seats, price],
-        (err, result) => {
-            if (err) return res.status(500).json({ success: false, error: err.message });
-            res.json({ success: true, message: 'Event created!', event_id: result.insertId });
-        }
-    );
+    // Lookup category_id from category name
+    db.query('SELECT category_id FROM categories WHERE category_name = ?', [category], (err, cats) => {
+        if (err || cats.length === 0)
+            return res.status(400).json({ success: false, message: 'Invalid category.' });
+
+        const category_id = cats[0].category_id;
+        db.query(
+            `INSERT INTO events (manager_id, category_id, title, description, venue, event_date, event_time, total_seats, available_seats, price)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [req.session.user.id, category_id, title, description || '', venue, event_date, event_time, total_seats, total_seats, price],
+            (err2, result) => {
+                if (err2) return res.status(500).json({ success: false, error: err2.message });
+                res.json({ success: true, message: 'Event created successfully!', event_id: result.insertId });
+            }
+        );
+    });
 });
 
 // ── Update Event ─────────────────────────────
@@ -286,14 +353,34 @@ app.get('/my-events', isLoggedIn, (req, res) => {
     if (req.session.user.role !== 'manager')
         return res.status(403).json({ success: false, message: 'Forbidden' });
 
-    db.query(
-        'SELECT * FROM events WHERE manager_id = ? ORDER BY event_date DESC',
-        [req.session.user.id],
-        (err, rows) => {
-            if (err) return res.status(500).json({ success: false, error: err.message });
-            res.json({ success: true, events: rows });
+    const managerId = req.session.user.id;
+    console.log(`[GET /my-events] manager_id = ${managerId}`);
+
+    db.query("SHOW COLUMNS FROM events LIKE 'category_id'", (schemaErr, cols) => {
+        const hasNewSchema = !schemaErr && cols.length > 0;
+
+        let sql;
+        if (hasNewSchema) {
+            sql = `
+                SELECT e.*, c.category_name AS category, c.icon AS category_icon
+                FROM events e
+                JOIN categories c ON e.category_id = c.category_id
+                WHERE e.manager_id = ?
+                ORDER BY e.event_date DESC
+            `;
+        } else {
+            sql = `SELECT * FROM events WHERE manager_id = ? ORDER BY event_date DESC`;
         }
-    );
+
+        db.query(sql, [managerId], (err, rows) => {
+            if (err) {
+                console.error('[GET /my-events] DB Error:', err.message);
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            console.log(`[GET /my-events] Found ${rows.length} events for manager_id=${managerId}`);
+            res.json({ success: true, events: rows });
+        });
+    });
 });
 
 // ============================================================
@@ -338,16 +425,42 @@ app.get('/my-bookings', isLoggedIn, (req, res) => {
     if (req.session.user.role !== 'customer')
         return res.status(403).json({ success: false, message: 'Forbidden' });
 
-    const sql = `
-        SELECT b.*, e.title, e.venue, e.event_date, e.event_time, e.category, e.price
-        FROM bookings b
-        JOIN events e ON b.event_id = e.event_id
-        WHERE b.customer_id = ?
-        ORDER BY b.booked_at DESC
-    `;
-    db.query(sql, [req.session.user.id], (err, rows) => {
-        if (err) return res.status(500).json({ success: false, error: err.message });
-        res.json({ success: true, bookings: rows });
+    const customerId = req.session.user.id;
+    console.log(`[GET /my-bookings] customer_id = ${customerId}`);
+
+    db.query("SHOW COLUMNS FROM events LIKE 'category_id'", (schemaErr, cols) => {
+        const hasNewSchema = !schemaErr && cols.length > 0;
+
+        let sql;
+        if (hasNewSchema) {
+            sql = `
+                SELECT b.*, e.title, e.venue, e.event_date, e.event_time, e.price,
+                       c.category_name AS category, c.icon AS category_icon
+                FROM bookings b
+                JOIN events     e ON b.event_id    = e.event_id
+                JOIN categories c ON e.category_id = c.category_id
+                WHERE b.customer_id = ?
+                ORDER BY b.booked_at DESC
+            `;
+        } else {
+            sql = `
+                SELECT b.*, e.title, e.venue, e.event_date, e.event_time,
+                       e.category, e.price
+                FROM bookings b
+                JOIN events e ON b.event_id = e.event_id
+                WHERE b.customer_id = ?
+                ORDER BY b.booked_at DESC
+            `;
+        }
+
+        db.query(sql, [customerId], (err, rows) => {
+            if (err) {
+                console.error('[GET /my-bookings] DB Error:', err.message);
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            console.log(`[GET /my-bookings] Found ${rows.length} bookings for customer_id=${customerId}`);
+            res.json({ success: true, bookings: rows });
+        });
     });
 });
 

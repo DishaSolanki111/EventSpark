@@ -3,226 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Spark</title>
-    
+    <title>EventSpark - Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
-<style>
-/* Reset and base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-/* Navigation */
-nav {
-    background-color: white;
-    padding: 1rem 2rem;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.logo {
-            display: flex;
-            align-items: center;
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
+            background-size: cover;
+            background-position: center;
+            display: flex; align-items: center; justify-content: center;
+            color: white; text-align: center;
         }
-
-        .logo img {
-            height: 70px;
-            margin-right: 10px;
+        .hero-content { padding: 5rem; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; font-family: Cooper, serif; animation: slideUp 1s ease-out both; }
+        .hero p  { font-size: 1.25rem; margin-bottom: 2rem; font-family: Cambria Math, serif; animation: slideUp 1s ease-out 0.2s both; opacity: 0; }
+        .cta-btn {
+            padding: 1rem 2rem; font-size: 1.1rem;
+            background: #2b6cb0; color: white;
+            border: none; border-radius: 0.5rem; cursor: pointer;
+            text-decoration: none; display: inline-block;
+            transition: background 0.3s, transform 0.3s;
+            animation: slideUp 1s ease-out 0.4s both; opacity: 0;
+            font-family: Cambria Math, serif; font-weight: 600;
         }
+        .cta-btn:hover { background: #276749; transform: scale(1.05); }
 
-        .logo span {
-            font-size: 3.0rem;
-            font-weight: bold;
-            color: #1a365d;
-            font-family:News706 BT;
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
         }
-
-
-
-
-
-.nav-links {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: #4a5568;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.nav-links a:hover {
-    color: #2b6cb0;
-}
-
-.login-btn, .signup-btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s;
-}
-
-.login-btn {
-    background: #B8E2F4;
-    color: white;
-}
-
-.signup-btn {
-    background: #B7E892;
-    color: white;
-}
-
-.login-btn:hover {
-    background: #2c5282;
-}
-
-.signup-btn:hover {
-    background: #2f855a;
-}
-
-.cta-btn.slide-up{
-    padding: 12px 25px;
-    background: #376ca9;
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;  /* ← removes underline */
-    display: inline-block;
-}
-
-.cta-btn.slide-up:hover{
-    background: #a6c7ec;
-    color: black;
-    
-}
-/* Hero Section */
-.hero {
-    height: 100vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                url('homebac.jpeg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-}
-
-.hero-content {
-    padding: 5rem;
-}
-
-.hero h1 {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    animation: slideUp 1s ease-out;
-}
-
-.hero p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    animation: slideUp 1s ease-out 0.2s forwards;
-    opacity: 0;
-}
-
-.cta-btn {
-    padding: 1rem 2rem;
-    font-size: 1.125rem;
-    background: #2b6cb0;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.3s, background-color 0.3s;
-    animation: slideUp 1s ease-out 0.4s forwards;
-    opacity: 0;
-}
-
-.cta-btn:hover {
-    background:green;
-    transform: scale(1.05);
-}
-
-
-
-
-/* Animations */
-@keyframes slideUp {
-    from {
-        transform: translateY(40px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
-    
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-    
-    .category-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .contact-buttons {
-        flex-direction: column;
-    }
-    
-    .contact-btn, .learn-btn {
-        width: 100%;
-    }
-}
-
-</style>
+        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } }
+    </style>
 </head>
-
-
 <body>
-    <!-- Navigation Bar -->
-    <nav>
-        <div class="logo">
-<img src="logo.jpg" >
-<span>EventSpark</span>
 
-</div>
-  <div class="nav-links">
-            <a href="home.html">Home</a>
-            <a href="event.html">Events</a>
-            <a href="about_us.html">About Us</a>
-            <a href="contact.html">Contact</a>
-	<a href="select_role.html" class="signup-btn">Sign up</a>
-	<a href="finallogin.html" class="login-btn">Login</a>
-    </div>
-    </nav>
+    <script src="header.js"></script>
 
-    <!-- Hero Section -->
     <div class="hero">
         <div class="hero-content">
-            <h1 class="slide-up">Create Unforgettable Events</h1>
-            <p class="slide-up delay">Your premier partner in event management excellence</p>
-            <a class="cta-btn slide-up" href="event.html">Get Started</a>
+            <h1>Create Unforgettable Events</h1>
+            <p>Your premier partner in event management excellence</p>
+            <a class="cta-btn" href="event.html">Get Started</a>
         </div>
     </div>
 

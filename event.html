@@ -5,291 +5,232 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events - EventSpark</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f0f4f8; min-height: 100vh; }
-        nav {
-            background: white; padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: fixed; top: 0; width: 100%; z-index: 10;
-        }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 55px; }
-        .logo span { font-size: 2rem; font-weight: bold; color: #1a365d; font-family: News706 BT; }
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-        .nav-links a { text-decoration: none; color: #4a5568; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: #2b6cb0; }
-        .user-badge { padding: 6px 14px; background: #ebf8ff; color: #2b6cb0; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
-        .logout-link { color: #e53e3e !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f7f8fc; min-height: 100vh; }
 
-        .main { padding: 90px 2rem 2rem; max-width: 1200px; margin: 0 auto; }
-        .page-header { margin-bottom: 2rem; }
-        .page-header h1 { font-size: 2rem; color: #1a365d; }
-        .page-header p { color: #718096; margin-top: 4px; }
+        .events-hero { height: 280px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
+        .events-hero h1 { font-size: 3rem; font-family: Cooper, serif; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
+        .events-hero p  { font-size: 1.1rem; font-family: Cambria Math, serif; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
-        .filters { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 8px 18px; border: 2px solid #e2e8f0;
-            border-radius: 20px; background: white; cursor: pointer;
-            font-size: 0.9rem; color: #4a5568; transition: all 0.2s;
-        }
-        .filter-btn.active { border-color: #2b6cb0; background: #2b6cb0; color: white; }
-        .search-bar {
-            margin-left: auto; padding: 8px 16px; border: 1px solid #e2e8f0;
-            border-radius: 20px; font-size: 0.9rem; width: 240px; outline: none;
-        }
-        .search-bar:focus { border-color: #2b6cb0; }
+        .filter-section { background: white; padding: 1.2rem 2rem; display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #e2e8f0; position: sticky; top: 92px; z-index: 50; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .filter-btn { padding: 0.45rem 1.1rem; border: 2px solid #e2e8f0; border-radius: 2rem; background: white; cursor: pointer; font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; font-weight: 600; transition: all 0.25s; }
+        .filter-btn:hover  { border-color: #2b6cb0; color: #2b6cb0; }
+        .filter-btn.active { border-color: #1a365d; background: #1a365d; color: white; }
+        .search-wrap { margin-left: auto; position: relative; }
+        .search-wrap input { padding: 0.45rem 1rem 0.45rem 2.2rem; border: 2px solid #e2e8f0; border-radius: 2rem; font-size: 0.875rem; font-family: Cambria Math, serif; width: 220px; outline: none; transition: border-color 0.3s; }
+        .search-wrap input:focus { border-color: #2b6cb0; }
+        .search-wrap::before { content: "🔍"; position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem; }
 
-        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .event-card {
-            background: white; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .event-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-        .card-banner {
-            height: 8px;
-            background: linear-gradient(90deg, #2b6cb0, #63b3ed);
-        }
-        .card-banner.weddings  { background: linear-gradient(90deg, #d53f8c, #f687b3); }
-        .card-banner.corporate { background: linear-gradient(90deg, #2b6cb0, #63b3ed); }
-        .card-banner.concerts  { background: linear-gradient(90deg, #6b46c1, #b794f4); }
-        .card-banner.social    { background: linear-gradient(90deg, #276749, #68d391); }
-        .card-banner.sports    { background: linear-gradient(90deg, #c05621, #f6ad55); }
-
-        .card-body { padding: 1.3rem; }
-        .card-category { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #718096; margin-bottom: 6px; }
-        .card-title { font-size: 1.2rem; font-weight: 700; color: #1a365d; margin-bottom: 10px; }
-        .card-meta { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
-        .card-meta span { font-size: 0.875rem; color: #4a5568; }
-        .card-price { font-size: 1.25rem; font-weight: 700; color: #2b6cb0; margin-bottom: 12px; }
-        .card-seats { font-size: 0.8rem; color: #718096; margin-bottom: 14px; }
-        .seats-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 4px; }
+        .content { max-width: 1200px; margin-top: 75px; padding: 2rem; }
+        .section-label { font-family: Cambria Math, serif; color: #718096; font-size: 0.85rem; margin-bottom: 1.2rem; }
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.8rem; }
+        .event-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.28s, box-shadow 0.28s; border: 1px solid #e8edf5; }
+        .event-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(26,54,93,0.13); }
+        .card-top { height: 7px; }
+        .card-top.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
+        .card-top.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
+        .card-top.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
+        .card-top.social    { background: linear-gradient(90deg,#22543d,#68d391); }
+        .card-top.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
+        .card-body { padding: 1.4rem 1.4rem 1rem; }
+        .card-cat { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem; }
+        .card-title { font-size: 1.2rem; font-family: Cooper, serif; color: #1a365d; margin-bottom: 0.9rem; line-height: 1.35; }
+        .card-details { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .card-details span { font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; }
+        .card-footer { padding: 1rem 1.4rem 1.3rem; border-top: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+        .price-block .price { font-size: 1.5rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
+        .price-block .per   { font-size: 0.78rem; color: #a0aec0; }
+        .seats-info { font-size: 0.78rem; color: #718096; margin-top: 3px; }
+        .seats-bar  { width: 100px; height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 4px; }
         .seats-fill { height: 100%; border-radius: 3px; background: #2b6cb0; }
-        .book-btn {
-            width: 100%; padding: 11px; background: #2b6cb0; color: white;
-            border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600;
-            transition: background 0.2s;
-        }
-        .book-btn:hover { background: #2c5282; }
-        .book-btn:disabled { background: #a0aec0; cursor: not-allowed; }
+        .book-btn { padding: 0.6rem 1.4rem; background: #1a365d; color: white; border: none; border-radius: 0.5rem; font-size: 0.9rem; font-weight: 600; font-family: Cambria Math, serif; cursor: pointer; transition: background 0.25s, transform 0.15s; }
+        .book-btn:hover   { background: #2b6cb0; transform: scale(1.03); }
+        .book-btn:disabled { background: #a0aec0; cursor: not-allowed; transform: none; }
 
-        /* Booking Modal */
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; justify-content: center; align-items: center; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal { background: white; padding: 2rem; border-radius: 12px; width: 420px; }
-        .modal h3 { font-size: 1.4rem; color: #1a365d; margin-bottom: 1.5rem; }
-        .modal-info p { font-size: 0.9rem; color: #4a5568; margin-bottom: 6px; }
-        .modal-price { font-size: 1.5rem; font-weight: 700; color: #2b6cb0; margin: 1rem 0; }
-        .seats-input { display: flex; align-items: center; gap: 12px; margin: 1rem 0; }
-        .seats-input label { font-weight: 600; color: #4a5568; }
-        .seats-input input { width: 70px; padding: 8px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; text-align: center; }
+        .modal { background: white; border-radius: 14px; padding: 2.2rem; width: 440px; max-width: 95vw; animation: modalIn 0.3s ease-out both; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        @keyframes modalIn { from { opacity:0; transform:translateY(30px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
+        .modal-header h2 { font-family: Cooper, serif; font-size: 1.5rem; color: #1a365d; }
+        .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #a0aec0; }
+        .modal-close:hover { color: #4a5568; }
+        .modal-event-info { margin-bottom: 1.2rem; }
+        .modal-event-info p { font-family: Cambria Math, serif; font-size: 0.9rem; color: #4a5568; margin-bottom: 5px; }
+        .modal-price-display { font-size: 1.8rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; margin: 1rem 0; }
+        .seats-row { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; }
+        .seats-row label { font-family: Cambria Math, serif; font-weight: 600; color: #4a5568; font-size: 0.9rem; }
+        .seats-row input { width: 80px; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; font-family: Cambria Math, serif; text-align: center; outline: none; }
+        .seats-row input:focus { border-color: #2b6cb0; box-shadow: 0 0 0 3px rgba(43,108,176,0.1); }
+        .total-display { font-weight: 700; font-size: 1.1rem; color: #2b6cb0; font-family: Cambria Math, serif; }
         .modal-btns { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        .btn-confirm { flex: 1; padding: 12px; background: #2b6cb0; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; }
-        .btn-cancel  { flex: 1; padding: 12px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 8px; cursor: pointer; }
-        .btn-confirm:hover { background: #2c5282; }
+        .btn-confirm { flex:1; padding:0.75rem; background:#1a365d; color:white; border:none; border-radius:0.5rem; font-size:1rem; font-weight:600; font-family:Cambria Math,serif; cursor:pointer; transition:background 0.25s; }
+        .btn-confirm:hover { background: #2b6cb0; }
+        .btn-cancel-modal { flex:1; padding:0.75rem; background:#f0f4f8; color:#4a5568; border:none; border-radius:0.5rem; font-family:Cambria Math,serif; cursor:pointer; }
+        .btn-cancel-modal:hover { background: #e2e8f0; }
 
-        #msg { position: fixed; bottom: 20px; right: 20px; padding: 14px 22px; border-radius: 10px; font-weight: 600; z-index: 200; display: none; }
-        .msg-success { background: #c6f6d5; color: #276749; }
-        .msg-error   { background: #fed7d7; color: #c53030; }
-
-        .empty-state { text-align: center; padding: 4rem; color: #a0aec0; grid-column: 1/-1; }
-        .my-bookings-link { display: inline-block; margin-top: 1.5rem; padding: 10px 22px; background: #2b6cb0; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        #toast { position:fixed; bottom:28px; right:28px; padding:1rem 1.5rem; border-radius:10px; font-family:Cambria Math,serif; font-size:0.95rem; font-weight:600; z-index:999; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+        .toast-success { background:#f0fff4; color:#276749; border-left:4px solid #38a169; }
+        .toast-error   { background:#fff5f5; color:#c53030; border-left:4px solid #e53e3e; }
+        .empty-state { grid-column:1/-1; text-align:center; padding:4rem; color:#a0aec0; font-family:Cambria Math,serif; }
     </style>
 </head>
 <body>
-<nav>
-    <div class="logo"><img src="logo.jpg" alt="Logo"><span>EventSpark</span></div>
-    <div class="nav-links">
-        <a href="home.html">Home</a>
-        <a href="event.html">Events</a>
-        <a href="about_us.html">About Us</a>
-        <a href="contact.html">Contact</a>
-        <span id="nav-user"></span>
-    </div>
-</nav>
 
-<div class="main">
-    <div class="page-header">
-        <h1>Upcoming Events</h1>
-        <p>Discover and book amazing events near you</p>
-    </div>
-
-    <div class="filters">
-        <button class="filter-btn active" onclick="filterEvents('all', this)">All</button>
-        <button class="filter-btn" onclick="filterEvents('weddings', this)">💍 Weddings</button>
-        <button class="filter-btn" onclick="filterEvents('corporate', this)">💼 Corporate</button>
-        <button class="filter-btn" onclick="filterEvents('concerts', this)">🎵 Concerts</button>
-        <button class="filter-btn" onclick="filterEvents('social', this)">🎉 Social</button>
-        <button class="filter-btn" onclick="filterEvents('sports', this)">⚽ Sports</button>
-        <input type="text" class="search-bar" id="search-bar" placeholder="🔍 Search events..." oninput="searchEvents()">
-    </div>
-
-    <div class="events-grid" id="events-grid">
-        <div class="empty-state"><p>Loading events...</p></div>
-    </div>
-</div>
-
-<!-- Booking Modal -->
-<div class="modal-overlay" id="book-modal">
-    <div class="modal">
-        <h3>Book Event</h3>
-        <div class="modal-info">
-            <p><strong id="m-title"></strong></p>
-            <p>📍 <span id="m-venue"></span></p>
-            <p>📅 <span id="m-date"></span></p>
-        </div>
-        <div class="modal-price" id="m-price"></div>
-        <div class="seats-input">
-            <label>Seats:</label>
-            <input type="number" id="m-seats" value="1" min="1" max="10" onchange="updateTotal()">
-            <span id="m-total" style="font-weight:700;color:#2b6cb0"></span>
-        </div>
-        <div class="modal-btns">
-            <button class="btn-confirm" onclick="confirmBooking()">Confirm Booking</button>
-            <button class="btn-cancel"  onclick="closeBookModal()">Cancel</button>
+    <script src="header.js"></script>
+    <div class="filter-section">
+        <button class="filter-btn active" onclick="filterEvents('all',this)">All Events</button>
+        <button class="filter-btn" onclick="filterEvents('weddings',this)">💍 Weddings</button>
+        <button class="filter-btn" onclick="filterEvents('corporate',this)">💼 Corporate</button>
+        <button class="filter-btn" onclick="filterEvents('concerts',this)">🎵 Concerts</button>
+        <button class="filter-btn" onclick="filterEvents('social',this)">🎉 Social</button>
+        <button class="filter-btn" onclick="filterEvents('sports',this)">⚽ Sports</button>
+        <div class="search-wrap">
+            <input type="text" id="search-bar" placeholder="Search events..." oninput="searchEvents()">
         </div>
     </div>
-</div>
 
-<div id="msg"></div>
+    <div class="content">
+        <div class="section-label" id="result-label">Loading events...</div>
+        <div class="events-grid" id="events-grid"></div>
+    </div>
 
-<script>
-    let allEvents = [];
-    let currentFilter = 'all';
-    let selectedEvent = null;
-    let isLoggedIn = false;
-    let userRole = '';
+    <div class="modal-overlay" id="book-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Book Event</h2>
+                <button class="modal-close" onclick="closeBookModal()">✕</button>
+            </div>
+            <div class="modal-event-info">
+                <p><strong id="m-title" style="font-size:1rem;color:#1a365d;font-family:Cooper,serif;"></strong></p>
+                <p>📍 <span id="m-venue"></span></p>
+                <p>📅 <span id="m-date"></span></p>
+                <p>🎫 <span id="m-avail"></span> seats available</p>
+            </div>
+            <div class="modal-price-display" id="m-price"></div>
+            <div class="seats-row">
+                <label>Number of Seats:</label>
+                <input type="number" id="m-seats" value="1" min="1" max="10" oninput="updateTotal()">
+                <span class="total-display" id="m-total"></span>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-confirm" onclick="confirmBooking()">Confirm Booking</button>
+                <button class="btn-cancel-modal" onclick="closeBookModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
-    function showMsg(text, type = 'success') {
-        const m = document.getElementById('msg');
-        m.textContent = text;
-        m.className = type === 'success' ? 'msg-success' : 'msg-error';
-        m.style.display = 'block';
-        setTimeout(() => m.style.display = 'none', 3500);
-    }
+    <div id="toast"></div>
 
-    async function loadSession() {
-        const res  = await fetch('/session-info');
-        const data = await res.json();
-        isLoggedIn = data.loggedIn;
-        userRole   = data.loggedIn ? data.user.role : '';
-        const navUser = document.getElementById('nav-user');
-        if (data.loggedIn) {
-            navUser.innerHTML = `<span class="user-badge">👤 ${data.user.name}</span>
-                <a href="/my-bookings-page.html">My Bookings</a>
-                <a href="/logout" class="logout-link">Logout</a>`;
-        } else {
-            navUser.innerHTML = `<a href="finallogin.html" style="background:#2b6cb0;color:white;padding:7px 16px;border-radius:8px;font-weight:600">Login</a>`;
+    <script>
+        let allEvents = [], currentFilter = 'all', selectedEvent = null;
+        let isLoggedIn = false, userRole = '';
+
+        function showToast(text, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = text; t.className = type === 'success' ? 'toast-success' : 'toast-error';
+            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3500);
         }
-    }
 
-    async function loadEvents(category = 'all', search = '') {
-        let url = '/events?';
-        if (category !== 'all') url += `category=${category}&`;
-        if (search) url += `search=${encodeURIComponent(search)}`;
-
-        const res  = await fetch(url);
-        const data = await res.json();
-        allEvents  = data.events || [];
-        renderEvents(allEvents);
-    }
-
-    function renderEvents(events) {
-        const grid = document.getElementById('events-grid');
-        if (!events.length) {
-            grid.innerHTML = '<div class="empty-state"><p>No events found.</p></div>';
-            return;
+        async function loadEvents(category = 'all', search = '') {
+            document.getElementById('result-label').textContent = 'Loading events...';
+            let url = '/events?';
+            if (category !== 'all') url += `category=${category}&`;
+            if (search) url += `search=${encodeURIComponent(search)}`;
+            const res  = await fetch(url);
+            const data = await res.json();
+            // get login state from header.js session
+            try {
+                const si = await fetch('/session-info');
+                const sd = await si.json();
+                isLoggedIn = sd.loggedIn; userRole = sd.loggedIn ? sd.user.role : '';
+            } catch(e) {}
+            allEvents = data.events || [];
+            renderEvents(allEvents);
         }
-        grid.innerHTML = events.map(e => {
-            const pct = Math.round((e.available_seats / e.total_seats) * 100);
-            const soldOut = e.available_seats === 0;
-            return `
-            <div class="event-card">
-                <div class="card-banner ${e.category}"></div>
-                <div class="card-body">
-                    <div class="card-category">${e.category}</div>
-                    <div class="card-title">${e.title}</div>
-                    <div class="card-meta">
-                        <span>📅 ${new Date(e.event_date).toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})} &nbsp; ⏰ ${e.event_time}</span>
-                        <span>📍 ${e.venue}</span>
-                        <span>🏢 ${e.manager_name}${e.company ? ' · '+e.company : ''}</span>
+
+        function renderEvents(events) {
+            const label = document.getElementById('result-label');
+            const grid  = document.getElementById('events-grid');
+            label.textContent = `Showing ${events.length} event${events.length !== 1 ? 's' : ''}`;
+            if (!events.length) { grid.innerHTML = `<div class="empty-state"><p>No events found.</p></div>`; return; }
+            grid.innerHTML = events.map(e => {
+                const pct = Math.round((e.available_seats / e.total_seats) * 100);
+                const soldOut = e.available_seats === 0;
+                const dateStr = new Date(e.event_date).toLocaleDateString('en-IN', {weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+                return `
+                <div class="event-card">
+                    <div class="card-top ${e.category}"></div>
+                    <div class="card-body">
+                        <div class="card-cat">${e.category}</div>
+                        <div class="card-title">${e.title}</div>
+                        <div class="card-details">
+                            <span>📅 ${dateStr} &nbsp;·&nbsp; ⏰ ${e.event_time}</span>
+                            <span>📍 ${e.venue}</span>
+                            <span>🏢 ${e.manager_name}${e.company ? ' · ' + e.company : ''}</span>
+                        </div>
                     </div>
-                    <div class="card-price">₹${parseFloat(e.price).toLocaleString('en-IN')} <span style="font-size:0.85rem;font-weight:400;color:#718096">/ seat</span></div>
-                    <div class="card-seats">
-                        ${soldOut ? '🔴 Sold Out' : `🟢 ${e.available_seats} of ${e.total_seats} seats available`}
-                        <div class="seats-bar"><div class="seats-fill" style="width:${pct}%"></div></div>
+                    <div class="card-footer">
+                        <div class="price-block">
+                            <div class="price">₹${parseFloat(e.price).toLocaleString('en-IN')}</div>
+                            <div class="per">per seat</div>
+                            <div class="seats-info">${soldOut ? '🔴 Sold Out' : `🟢 ${e.available_seats} seats left`}</div>
+                            <div class="seats-bar"><div class="seats-fill" style="width:${pct}%"></div></div>
+                        </div>
+                        <button class="book-btn" ${soldOut ? 'disabled' : ''} onclick='openBookModal(${JSON.stringify(e).replace(/'/g,"\\'")} )'>
+                            ${soldOut ? 'Sold Out' : 'Book Now'}
+                        </button>
                     </div>
-                    <button class="book-btn" ${soldOut ? 'disabled' : ''} onclick="openBookModal(${JSON.stringify(e).replace(/"/g,'&quot;')})">
-                        ${soldOut ? 'Sold Out' : 'Book Now'}
-                    </button>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-    function filterEvents(cat, btn) {
-        currentFilter = cat;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        loadEvents(cat, document.getElementById('search-bar').value);
-    }
-
-    let searchTimer;
-    function searchEvents() {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            loadEvents(currentFilter, document.getElementById('search-bar').value);
-        }, 350);
-    }
-
-    function openBookModal(event) {
-        if (!isLoggedIn) {
-            if (confirm('Please login to book events. Go to login page?'))
-                window.location = '/finallogin.html';
-            return;
+                </div>`;
+            }).join('');
         }
-        if (userRole !== 'customer') {
-            showMsg('Only customers can book events.', 'error'); return;
+
+        function filterEvents(cat, btn) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadEvents(cat, document.getElementById('search-bar').value);
         }
-        selectedEvent = event;
-        document.getElementById('m-title').textContent = event.title;
-        document.getElementById('m-venue').textContent = event.venue;
-        document.getElementById('m-date').textContent  = new Date(event.event_date).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) + ' · ' + event.event_time;
-        document.getElementById('m-price').textContent = '₹' + parseFloat(event.price).toLocaleString('en-IN') + ' / seat';
-        document.getElementById('m-seats').max = Math.min(10, event.available_seats);
-        document.getElementById('m-seats').value = 1;
-        updateTotal();
-        document.getElementById('book-modal').classList.add('active');
-    }
 
-    function updateTotal() {
-        if (!selectedEvent) return;
-        const seats = parseInt(document.getElementById('m-seats').value) || 1;
-        const total = seats * parseFloat(selectedEvent.price);
-        document.getElementById('m-total').textContent = '= ₹' + total.toLocaleString('en-IN');
-    }
-
-    function closeBookModal() { document.getElementById('book-modal').classList.remove('active'); }
-
-    async function confirmBooking() {
-        const seats = parseInt(document.getElementById('m-seats').value) || 1;
-        const res  = await fetch('/book', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ event_id: selectedEvent.event_id, seats_booked: seats })
-        });
-        const data = await res.json();
-        if (data.success) {
-            showMsg(`🎉 Booked ${seats} seat(s)! Total: ₹${data.total_amount.toLocaleString('en-IN')}`);
-            closeBookModal();
-            loadEvents(currentFilter, document.getElementById('search-bar').value);
-        } else {
-            showMsg(data.message || 'Booking failed.', 'error');
+        let searchTimer;
+        function searchEvents() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => loadEvents(currentFilter, document.getElementById('search-bar').value), 350);
         }
-    }
 
-    loadSession().then(() => loadEvents());
-</script>
+        function openBookModal(event) {
+            if (!isLoggedIn) { if (confirm('Please login to book. Go to login page?')) window.location='/finallogin.html'; return; }
+            if (userRole !== 'customer') { showToast('Only customers can book events.', 'error'); return; }
+            selectedEvent = event;
+            document.getElementById('m-title').textContent = event.title;
+            document.getElementById('m-venue').textContent = event.venue;
+            document.getElementById('m-date').textContent  = new Date(event.event_date).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) + ' · ' + event.event_time;
+            document.getElementById('m-avail').textContent = event.available_seats;
+            document.getElementById('m-price').textContent = '₹' + parseFloat(event.price).toLocaleString('en-IN') + ' / seat';
+            document.getElementById('m-seats').max = Math.min(10, event.available_seats);
+            document.getElementById('m-seats').value = 1;
+            updateTotal();
+            document.getElementById('book-modal').classList.add('active');
+        }
+
+        function updateTotal() {
+            if (!selectedEvent) return;
+            const seats = parseInt(document.getElementById('m-seats').value) || 1;
+            document.getElementById('m-total').textContent = '= ₹' + (seats * parseFloat(selectedEvent.price)).toLocaleString('en-IN');
+        }
+
+        function closeBookModal() { document.getElementById('book-modal').classList.remove('active'); }
+
+        async function confirmBooking() {
+            const seats = parseInt(document.getElementById('m-seats').value) || 1;
+            const res   = await fetch('/book', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({event_id: selectedEvent.event_id, seats_booked: seats}) });
+            const data  = await res.json();
+            if (data.success) { showToast(`🎉 Booked! Total: ₹${data.total_amount.toLocaleString('en-IN')}`); closeBookModal(); loadEvents(currentFilter, document.getElementById('search-bar').value); }
+            else showToast(data.message || 'Booking failed.', 'error');
+        }
+
+        loadEvents();
+    </script>
 </body>
 </html>

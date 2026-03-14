@@ -5,194 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - EventSpark</title>
   <style>
-    /* Reset and base styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
 
-    /* Navigation */
-    nav {
-      background-color: white;
-      padding: 1rem 2rem;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    .about-hero { height: 260px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
+    .about-hero h1 { font-family: Cooper, serif; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
+    .about-hero p  { font-family: Cambria Math, serif; font-size: 1.1rem; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
-    .logo {
-      display: flex;
-      align-items: center;
-    }
+    .about-section { max-width: 1500px; margin: 100px 100px 55px; background: rgba(255,255,255,0.97); padding: 2.5rem 3rem; border-radius: 14px; box-shadow: 0 4px 20px rgba(26,54,93,0.1); border: 1px solid #e8edf5; animation: fadeUp 0.9s ease-out 0.3s both; }
+    .about-section h2 { font-family: Cooper, serif; font-size: 2rem; color: #1a365d; margin-bottom: 1.5rem; text-align: center; }
+    .about-section p { font-family: Cambria Math, serif; font-size: 1rem; line-height: 1.9; margin-bottom: 1.2rem; text-align: justify; color: #4a5568; }
+    .about-section p strong { color: #1a365d; }
 
-    .logo img {
-      height: 70px;
-      margin-right: 10px;
-    }
+    .info-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+    .info-card { background: #f7f8fc; border: 1px solid #e8edf5; border-radius: 10px; padding: 1.3rem 1rem; text-align: center; }
+    .info-card .icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .info-card h4 { font-family: Cooper, serif; font-size: 1rem; color: #1a365d; margin-bottom: 0.3rem; }
+    .info-card p  { font-family: Cambria Math, serif; font-size: 0.82rem; color: #718096; margin: 0; text-align: center; }
 
-    .logo span {
-      font-size: 3.0rem;
-      font-weight: bold;
-      color: #1a365d;
-      font-family: News706 BT;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #4a5568;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: #2b6cb0;
-    }
-
-    .login-btn, .signup-btn {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s;
-    }
-
-    .login-btn {
-      background: #B8E2F4;
-      color: white;
-    }
-
-    .signup-btn {
-      background: #B7E892;
-      color: white;
-    }
-
-    .login-btn:hover {
-      background: #2c5282;
-    }
-
-    .signup-btn:hover {
-      background: #2f855a;
-    }
-
-    /* About Section */
-    .about-section {
-      max-width: 900px;
-      margin: 120px auto 60px; /* Adjusted margin to account for fixed nav */
-      background: rgba(255, 255, 255, 0.9);
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      animation: slideUp 1s ease-out;
-    }
-
-    .about-section h2 {
-      text-align: center;
-      font-size: 28px;
-      color: #1a365d;
-      margin-bottom: 20px;
-    }
-
-    .about-section p {
-      font-size: 16px;
-      line-height: 1.8;
-      margin-bottom: 15px;
-      text-align: justify;
-      color: #333;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #f1f1f1;
-      font-size: 14px;
-      color: #555;
-    }
-
-    /* Animations */
-    @keyframes slideUp {
-      from {
-        transform: translateY(40px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-
-      .about-section {
-        margin: 100px 20px 60px;
-        padding: 20px;
-      }
-
-      .about-section h2 {
-        font-size: 24px;
-      }
-    }
+    footer { text-align: center; padding: 1.2rem; background: #f1f1f1; font-size: 0.875rem; color: #718096; }
+    @media (max-width: 768px) { .about-section { margin: 2rem 1rem 3rem; padding: 1.5rem; } .about-hero h1 { font-size: 2rem; } }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">
-      <img src="logo.jpg" alt="EventSpark Logo">
-      <span>EventSpark</span>
-    </div>
-    <div class="nav-links">
-      <a href="home.html">Home</a>
-      <a href="event.html">Events</a>
-      <a href="about_us.html">About Us</a>
-      <a href="contact.html">Contact</a>
-      <a href="select_role.html" class="signup-btn">Sign up</a>
-      <a href="finallogin.html" class="login-btn">Login</a>
-    </div>
-  </nav>
+  <script src="header.js"></script>
 
-  <!-- About Content -->
+
+
   <section class="about-section">
-    <h2>About Us</h2>
-    <p>
-      Welcome to <strong>EventSpark</strong> – your partner in creating unforgettable events. 
-      This platform has been designed to simplify event planning and management, making the process 
-      seamless for both organizers and participants.
-    </p>
-    <p>
-      Our project allows users to explore upcoming events, register with ease, and helps event managers 
-      handle registrations effectively. With a clean interface and responsive design, EventSpark ensures 
-      smooth user experience across all devices.
-    </p>
-    <p>
-      This system is built using <strong>HTML, CSS, JavaScript</strong> for the front-end, 
-      <strong>Node.js</strong> for the back-end, and <strong>MySQL</strong> for database management. 
-      Together, these technologies provide a secure, scalable, and efficient platform.
-    </p>
-    <p>
-      EventSpark is developed as part of our <strong>college project</strong>, but it is designed 
-      with real-world usability in mind – making it suitable for colleges, organizations, and community events.
-    </p>
+    <h2>Who We Are</h2>
+    <p>Welcome to <strong>EventSpark</strong> – your partner in creating unforgettable events. This platform has been designed to simplify event planning and management, making the process seamless for both organizers and participants.</p>
+    <p>Our project allows users to explore upcoming events, register with ease, and helps event managers handle registrations effectively. With a clean interface and responsive design, EventSpark ensures a smooth user experience across all devices.</p>
+    <p>This system is built using <strong>HTML, CSS, JavaScript</strong> for the front-end, <strong>Node.js</strong> for the back-end, and <strong>MySQL</strong> for database management. Together, these technologies provide a secure, scalable, and efficient platform.</p>
+    <p>EventSpark is developed as part of our <strong>college project</strong>, but it is designed with real-world usability in mind – making it suitable for colleges, organizations, and community events.</p>
+    <div class="info-cards">
+      <div class="info-card"><div class="icon">🎯</div><h4>Our Mission</h4><p>Simplify event planning for everyone</p></div>
+      <div class="info-card"><div class="icon">💻</div><h4>Tech Stack</h4><p>HTML · CSS · JS · Node.js · MySQL</p></div>
+     
+    </div>
   </section>
+
+  <footer>&copy; 2026 EventSpark. All rights reserved.</footer>
+
 </body>
 </html>

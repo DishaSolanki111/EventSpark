@@ -3,300 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Manager Registration - EventSpark</title>
+    <title>Manager Registration - EventSpark</title>
     <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            font-family: sans-serif;
-  background-image: url('homebac.jpeg'); /* Replace with your image path */
-background-position: center;
-            background-size: cover;
-            background-repeat: no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.3);
-            z-index: -1;
-        }
-
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-          background-color: white;
-            /* background-color: rgba(0,0,0, 0.1); */
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo img {
-            height: 70px;
-            margin-right: 10px;
-        }
-
-        .logo span {
-            font-size: 3.0rem;
-            font-weight: bold;
-            color: #1a365d;
- font-family:News706 BT;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #2b6cb0;
-        }
-
-
-        .registration-container {
-            width: 550px;
-            z-index: 1;
-            margin-top: 80px; /* Adjust for nav height */
-        }
-
-        .registration-form {
-            background-color: rgba(255,255,255,0.8);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            height: auto;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-family: Cooper;
-        }
-
-        .registration-form > p {
-            color: #718096;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #4a5568;
-            margin-bottom: 0.5rem;
-            font-family: Cambria Math;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-family: Cambria Math;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background: #2b6cb0;
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: Cambria Math;
-            transition: background-color 0.3s;
-        }
-
-        .submit-btn:hover {
-            background: #2c5282;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #718096;
-        }
-
-        .login-link a {
-            color: #2b6cb0;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .registration-form {
-                padding: 1.5rem;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-image: url('homebac.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 110px 1rem 3rem; }
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(255,255,255,0.3); z-index: 0; }
+        .registration-container { position: relative; z-index: 1; width: 520px; animation: fadeUp 0.7s ease-out both; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+        .registration-form { background: rgba(255,255,255,0.82); backdrop-filter: blur(6px); border-radius: 16px; padding: 2.5rem 2.2rem; box-shadow: 0 12px 40px rgba(26,54,93,0.18); }
+        .form-header { margin-bottom: 1.8rem; }
+        .form-header h1 { font-family: Cooper, serif; font-size: 2.1rem; color: #1a365d; margin-bottom: 0.3rem; }
+        .form-header p { font-family: Cambria Math, serif; color: #718096; font-size: 0.9rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 1.3rem; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-family: Cambria Math, serif; }
+        .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 1rem; font-family: Cambria Math, serif; background: rgba(255,255,255,0.9); outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: #2b6cb0; box-shadow: 0 0 0 3px rgba(43,108,176,0.12); }
+        .submit-btn { width: 100%; padding: 0.8rem; background: #1a365d; color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; font-family: Cambria Math, serif; cursor: pointer; transition: background 0.3s; margin-top: 0.3rem; }
+        .submit-btn:hover { background: #2b6cb0; }
+        .login-link { text-align: center; margin-top: 1.3rem; font-family: Cambria Math, serif; color: #718096; font-size: 0.9rem; }
+        .login-link a { color: #2b6cb0; text-decoration: none; font-weight: 600; }
+        .login-link a:hover { text-decoration: underline; }
     </style>
-<script>
-function validateForm()
-{
-var x=myForm.fname.value;
-var xlen=myForm.mob.value.length;
-var numbers = /^[0-9]+$/; 
-var a=" "; //added space bcoz variable become undefined and gives error
-var e=myForm.email.value;
-var atpos=e.indexOf("@");
-var dotpos=e.indexOf(".");
-var pass = myForm.pass.value;
-var cnf = myForm.cnfpass.value;
-if (x==null || x=="")
-  {
-  	a+="First name must be filled out\n";
-  }
-if(xlen<10 || xlen>10)
-  {
-	a+="mobile no should be 10 digits\n";
-  }
-if(myForm.mob.value.match(numbers))  
-{  
- 
-}  
-else  
-{  
-a+="mobile no must have numeric characters only\n";  
-
-}
-if (atpos<1 || dotpos<atpos+2 || dotpos+2>=e.length)
-  {
-  a+="enter valid valid e-mail address \n";
-   }
-
-if((myForm.specialization[0].checked==false) &&(myForm.specialization[1].checked==false) &&(myForm.specialization[2].checked==false) &&(myForm.specialization[3].checked==false) &&(myForm.specialization[4].checked==false))
-{
- 	a+="please enter specialization";
-}
-
- if(pass=="" || pass==null)
-{
-	a+="Password can't be blank";
-}
- if(pass != cnf)
-{
-	a+="Password dosent match";
-}
-	
-if(a==" ")
-	{
-	alert("done");
-	return true; //just to check if only space is there so not to display in alert
-	}
-	else
-	{
-	alert(a);
-	}
-}
-</script>
-
 </head>
 <body>
-    <nav>
-        <div class="logo">
-            <img src="logo.jpg" alt="EventSpark Logo">
-            <span>EventSpark</span>
-        </div>
-        <div class="nav-links">
-            <a href="home.html">Home</a>
-            <a href="event.html">Events</a>
-            <a href="about_us.html">About Us</a>
-            <a href="contact.html">Contact</a>
-        </div>
-    </nav>
+
+    <script src="header.js"></script>
 
     <div class="registration-container">
         <div class="registration-form">
-            <div class="header">
-                <h1>Event Manager Registration</h1>
+            <div class="form-header">
+                <h1>Join as Manager</h1>
+                <p>Join our network of professional event managers</p>
             </div>
-            <p>Join our network of professional event managers</p>
-            <!-- <form name="myForm" action="#" method="POST" onsubmit="return validateForm()"> -->
-            <form name="myForm" action="http://localhost:5000/register-manager" method="POST">
-                <div class="form-group">
-                    <label for="fullname">Full_Name</label>
-                    <input type="text" id="fullname" name="fname" required>
+            <form action="http://localhost:5000/register-manager" method="POST">
+                <div class="form-group"><label>Full Name</label><input type="text" name="fname" placeholder="Your full name" required></div>
+                <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+                <div class="form-group"><label>Phone Number</label><input type="tel" name="mob" placeholder="10-digit mobile number" required maxlength="10"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Company Name</label><input type="text" name="company" placeholder="Your company"></div>
+                    <div class="form-group"><label>Years of Experience</label><input type="number" name="experience" min="0" placeholder="e.g. 5"></div>
                 </div>
-
                 <div class="form-group">
-                    <label for="email">Email_Address</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Phone_Number</label>
-                    <input type="tel" id="phone" name="mob" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="company">Company_Name</label>
-                    <input type="text" id="company" name="company" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="experience">Years_of_Experience</label>
-                    <input type="number" id="experience" name="experience" min="0" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="specialization">EventSpecialization</label>
-                    <select id="specialization" name="specialization" required>
+                    <label>Event Specialization</label>
+                    <select name="specialization" required>
                         <option value="">Select Specialization</option>
                         <option value="weddings">Weddings</option>
                         <option value="corporate">Corporate Events</option>
@@ -305,24 +55,15 @@ if(a==" ")
                         <option value="sports">Sports Events</option>
                     </select>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="pass" required>
+                <div class="form-row">
+                    <div class="form-group"><label>Password</label><input type="password" name="pass" placeholder="Create password" required></div>
+                    <div class="form-group"><label>Confirm Password</label><input type="password" name="cnfpass" placeholder="Repeat password" required></div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirm_Password</label>
-                    <input type="password" id="confirm-password" name="cnfpass" required>
-                </div>
-                
-                <!-- <button type="submit" class="submit-btn">Create Account</button> -->
-                <button type="submit" class="submit-btn">submit</button>
-                <!-- <a href="event.html">Events</a> -->
+                <button type="submit" class="submit-btn">Create Manager Account</button>
             </form>
-            
-            <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
+            <p class="login-link">Already have an account? <a href="finallogin.html">Login here</a></p>
         </div>
     </div>
+
 </body>
 </html>

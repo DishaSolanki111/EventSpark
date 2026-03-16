@@ -6,145 +6,113 @@
     <title>My Bookings - EventSpark</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f7f8fc; min-height: 100vh; }
 
-        /* ── NAV ── */
-        nav {
-            background-color: white;
-            padding: 1rem 2rem;
-            position: fixed; top: 0; left: 0; width: 100%;
-            z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        /* ── FULL PAGE BACKGROUND IMAGE ── */
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
         }
-        .logo { display: flex; align-items: center; }
-        .logo img { height: 70px; margin-right: 10px; }
-        .logo span { font-size: 3.0rem; font-weight: bold; color: #1a365d; font-family: News706 BT, serif; }
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-        .nav-links a { text-decoration: none; color: #4a5568; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: #2b6cb0; }
-        .logout-btn {
-            padding: 0.5rem 1.1rem;
-            background: #fff5f5; color: #c53030;
-            border: 1.5px solid #fed7d7; border-radius: 0.5rem;
-            cursor: pointer; font-weight: 600; font-family: Cambria Math, serif;
-            transition: all 0.25s;
-        }
-        .logout-btn:hover { background: #c53030; color: white; border-color: #c53030; }
+     
+        .page-hero, .main, #toast { position: relative; z-index: 1; }
 
         /* ── HERO BANNER ── */
         .page-hero {
-            height: 220px;
-            background: linear-gradient(rgba(0,0,0,0.52), rgba(0,0,0,0.52)),
-                        url('homebac.jpeg') center/cover no-repeat;
+
             display: flex; flex-direction: column;
-            align-items: flex-start; justify-content: flex-end;
-            padding: 2rem 3rem;
-            margin-top: 90px;
+            align-items: center; justify-content: center;
+            color: white; text-align: center;
+            margin-top: 120px;
         }
-        .page-hero h1 {
-            font-family: Cooper, serif;
-            font-size: 2.4rem; color: white; margin-bottom: 0.3rem;
-        }
-        .page-hero p { font-family: Cambria Math, serif; color: rgba(255,255,255,0.85); font-size: 1rem; }
+        .page-hero h1 { font-family: Cooper, serif; font-size: 40px; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
+        .page-hero p  { font-family: Cambria Math, serif; font-size: 1.1rem; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
         /* ── MAIN ── */
-        .main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem; }
+        .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .section-label { font-family: Cambria Math, serif; color: #4a5568; font-size: 0.9rem; margin-bottom: 1.5rem; font-weight: 600; }
 
-        /* ── BOOKING CARDS ── */
+        /* ── BOOKINGS GRID — same square style as event cards ── */
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.8rem;
+        }
+
         .booking-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.09);
             border: 1px solid #e8edf5;
-            margin-bottom: 1.3rem;
-            overflow: hidden;
-            display: flex;
-            transition: transform 0.22s, box-shadow 0.22s;
+            transition: transform 0.28s, box-shadow 0.28s;
+            display: flex; flex-direction: column;
         }
-        .booking-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(26,54,93,0.11);
-        }
+        .booking-card:hover { transform: translateY(-6px); box-shadow: 0 14px 32px rgba(26,54,93,0.15); }
 
-        .booking-side-bar { width: 6px; flex-shrink: 0; }
-        .booking-side-bar.weddings  { background: linear-gradient(180deg,#c53d8a,#f687b3); }
-        .booking-side-bar.corporate { background: linear-gradient(180deg,#1a365d,#2b6cb0); }
-        .booking-side-bar.concerts  { background: linear-gradient(180deg,#553c9a,#b794f4); }
-        .booking-side-bar.social    { background: linear-gradient(180deg,#22543d,#68d391); }
-        .booking-side-bar.sports    { background: linear-gradient(180deg,#7b341e,#f6ad55); }
+        /* coloured top stripe — same as event cards */
+        .card-top { height: 7px; }
+        .card-top.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
+        .card-top.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
+        .card-top.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
+        .card-top.social    { background: linear-gradient(90deg,#22543d,#68d391); }
+        .card-top.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
 
-        .booking-body {
-            flex: 1;
-            padding: 1.4rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
+        .card-body { padding: 1.4rem 1.4rem 1rem; flex: 1; }
+        .card-cat {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem;
         }
+        .card-title { font-size: 1.2rem; font-family: Cooper, serif; color: #1a365d; margin-bottom: 0.9rem; line-height: 1.35; }
+        .card-details { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .card-details span { font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; }
 
-        .booking-info h3 {
-            font-family: Cooper, serif;
-            font-size: 1.15rem; color: #1a365d; margin-bottom: 0.5rem;
-        }
-        .booking-info p {
-            font-family: Cambria Math, serif;
-            font-size: 0.875rem; color: #4a5568; margin-bottom: 4px;
-        }
-        .booking-meta {
+        /* booking id + date booked row */
+        .card-meta-row {
+            display: flex; align-items: center; gap: 1rem;
             font-size: 0.78rem; color: #a0aec0;
-            font-family: Arial, sans-serif; margin-top: 6px;
+            font-family: Arial, sans-serif; margin-top: 0.4rem;
         }
 
-        .booking-right { text-align: right; flex-shrink: 0; }
-        .booking-amount {
-            font-family: Cambria Math, serif;
-            font-size: 1.6rem; font-weight: 700; color: #1a365d;
+        /* footer — price left, status + button right */
+        .card-footer {
+            padding: 1rem 1.4rem 1.3rem;
+            border-top: 1px solid #f0f0f0;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .booking-seats {
-            font-family: Arial, sans-serif;
-            font-size: 0.8rem; color: #718096; margin-bottom: 8px;
-        }
+        .price-block .price  { font-size: 1.5rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
+        .price-block .label  { font-size: 0.78rem; color: #a0aec0; margin-bottom: 4px; }
+        .price-block .seats  { font-size: 0.82rem; color: #718096; font-family: Cambria Math, serif; margin-top: 2px; }
+
+        .right-block { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
         .badge {
-            display: inline-block;
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 700;
-            font-family: Arial, sans-serif; text-transform: capitalize;
-            letter-spacing: 0.3px;
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 700; font-family: Arial, sans-serif;
+            text-transform: capitalize; letter-spacing: 0.3px;
         }
         .badge-confirmed { background: #f0fff4; color: #276749; }
         .badge-cancelled { background: #fff5f5; color: #c53030; }
         .badge-pending   { background: #fefcbf; color: #b7791f; }
 
         .cancel-btn {
-            display: block; margin-top: 10px; margin-left: auto;
-            padding: 6px 16px;
-            background: #fff5f5; color: #c53030;
+            padding: 0.5rem 1.1rem; background: #fff5f5; color: #c53030;
             border: 1.5px solid #fed7d7; border-radius: 0.4rem;
             cursor: pointer; font-size: 0.82rem; font-weight: 600;
-            font-family: Cambria Math, serif;
-            transition: all 0.22s;
+            font-family: Cambria Math, serif; transition: all 0.22s; white-space: nowrap;
         }
         .cancel-btn:hover { background: #c53030; color: white; border-color: #c53030; }
 
         /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-        .empty-icon { font-size: 4rem; margin-bottom: 1rem; }
-        .empty-state h2 {
-            font-family: Cooper, serif;
-            font-size: 1.5rem; color: #1a365d; margin-bottom: 0.5rem;
-        }
-        .empty-state p { font-family: Cambria Math, serif; color: #718096; margin-bottom: 1.5rem; }
+        .empty-state { grid-column: 1/-1; text-align: center; padding: 5rem 2rem; }
+        .empty-icon  { font-size: 4rem; margin-bottom: 1rem; }
+        .empty-state h2 { font-family: Cooper, serif; font-size: 1.5rem; color: #1a365d; margin-bottom: 0.5rem; }
+        .empty-state p  { font-family: Cambria Math, serif; color: #718096; margin-bottom: 1.5rem; }
         .browse-btn {
-            display: inline-block;
-            padding: 0.7rem 1.6rem;
-            background: #1a365d; color: white;
-            border-radius: 0.5rem; text-decoration: none;
-            font-weight: 600; font-family: Cambria Math, serif;
+            display: inline-block; padding: 0.7rem 1.8rem;
+            background: #1a365d; color: white; border-radius: 0.5rem;
+            text-decoration: none; font-weight: 600; font-family: Cambria Math, serif;
             transition: background 0.25s;
         }
         .browse-btn:hover { background: #2b6cb0; }
@@ -154,127 +122,128 @@
             position: fixed; bottom: 28px; right: 28px;
             padding: 1rem 1.5rem; border-radius: 10px;
             font-family: Cambria Math, serif; font-size: 0.95rem; font-weight: 600;
-            z-index: 999; display: none;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 1200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
         .toast-success { background: #f0fff4; color: #276749; border-left: 4px solid #38a169; }
         .toast-error   { background: #fff5f5; color: #c53030; border-left: 4px solid #e53e3e; }
-
-        .section-label {
-            font-family: Cambria Math, serif; color: #718096;
-            font-size: 0.85rem; margin-bottom: 1.3rem;
-        }
     </style>
 </head>
 <body>
 
-<!-- NAV -->
-<script src="header.js"></script>
+    <script src="header.js"></script>
 
-<!-- HERO -->
-<div class="page-hero">
-    <h1>My Bookings</h1>
-    <p>Track and manage all your event reservations</p>
-</div>
+    <!-- HERO -->
+    <div class="page-hero">
+        <h1>My Bookings</h1>
+        <p>Track and manage all your event reservations</p>
+    </div>
 
-<!-- MAIN -->
-<div class="main">
-    <div class="section-label" id="booking-label">Loading your bookings...</div>
-    <div id="bookings-list"></div>
-</div>
+    <!-- MAIN -->
+    <div class="main">
+        <div class="section-label" id="booking-label">Loading your bookings...</div>
+        <div class="bookings-grid" id="bookings-list"></div>
+    </div>
 
-<div id="toast"></div>
+    <div id="toast"></div>
 
-<script>
-    function showToast(text, type = 'success') {
-        const t = document.getElementById('toast');
-        t.textContent = text;
-        t.className = type === 'success' ? 'toast-success' : 'toast-error';
-        t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3200);
-    }
-
-    async function loadBookings() {
-        const res  = await fetch('/my-bookings');
-        const data = await res.json();
-        const list  = document.getElementById('bookings-list');
-        const label = document.getElementById('booking-label');
-
-        if (!data.success || !data.bookings.length) {
-            label.textContent = '0 bookings found';
-            list.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">🎟️</div>
-                    <h2>No Bookings Yet</h2>
-                    <p>You haven't booked any events. Browse upcoming events and reserve your spot!</p>
-                    <a href="event.html" class="browse-btn">Browse Events →</a>
-                </div>`;
-            return;
+    <script>
+        function showToast(text, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = text;
+            t.className = type === 'success' ? 'toast-success' : 'toast-error';
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3500);
         }
 
-        label.textContent = `${data.bookings.length} booking${data.bookings.length !== 1 ? 's' : ''} found`;
-
-        list.innerHTML = data.bookings.map(b => {
-            const dateStr = new Date(b.event_date).toLocaleDateString('en-IN',
-                {day:'2-digit', month:'long', year:'numeric'});
-            const bookedOn = new Date(b.booked_at).toLocaleDateString('en-IN',
-                {day:'2-digit', month:'short', year:'numeric'});
-            return `
-            <div class="booking-card">
-                <div class="booking-side-bar ${b.category}"></div>
-                <div class="booking-body">
-                    <div class="booking-info">
-                        <h3>${b.title}</h3>
-                        <p>📍 ${b.venue}</p>
-                        <p>📅 ${dateStr} &nbsp;·&nbsp; ⏰ ${b.event_time}</p>
-                        <p>🎫 ${b.seats_booked} seat${b.seats_booked > 1 ? 's' : ''} &nbsp;·&nbsp; Booking #${b.booking_id}</p>
-                        <div class="booking-meta">Booked on ${bookedOn}</div>
-                    </div>
-                    <div class="booking-right">
-                        <div class="booking-amount">₹${parseFloat(b.total_amount).toLocaleString('en-IN')}</div>
-                        <div class="booking-seats">Total Amount</div>
-                        <span class="badge badge-${b.booking_status}">${b.booking_status}</span>
-                        ${b.booking_status === 'confirmed'
-                            ? `<button class="cancel-btn" onclick="cancelBooking(${b.booking_id})">Cancel Booking</button>`
-                            : ''}
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-    }
-
-
-
-    async function cancelBooking(id) {
-        if (!confirm('Are you sure you want to cancel this booking?')) return;
-        const res  = await fetch(`/bookings/${id}/cancel`, { method: 'PUT' });
-        const data = await res.json();
-        if (data.success) { showToast('✅ Booking cancelled successfully.'); loadBookings(); }
-        else showToast(data.message || 'Could not cancel.', 'error');
-    }
-
-    // ── Init: wait for DOM, check session, then load bookings ──
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const res  = await fetch('/session-info');
+        async function loadBookings() {
+            const res  = await fetch('/my-bookings');
             const data = await res.json();
+            const grid  = document.getElementById('bookings-list');
+            const label = document.getElementById('booking-label');
 
-            if (!data.loggedIn || data.user.role !== 'customer') {
-                const label = document.getElementById('booking-label');
-                if (label) label.textContent = 'Please login to view bookings.';
-                showToast('Please login as a customer first.', 'error');
-                setTimeout(() => window.location = '/finallogin.html', 1500);
+            if (!data.success) {
+                label.textContent = 'Error loading bookings.';
+                showToast('❌ ' + (data.error || 'Could not load bookings.'), 'error');
                 return;
             }
 
-            await loadBookings();
+            if (!data.bookings || !data.bookings.length) {
+                label.textContent = '0 bookings found';
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎟️</div>
+                        <h2>No Bookings Yet</h2>
+                        <p>You haven't booked any events yet.<br>Browse upcoming events and reserve your spot!</p>
+                        <a href="event.html" class="browse-btn">Browse Events →</a>
+                    </div>`;
+                return;
+            }
 
-        } catch(e) {
-            showToast('Could not connect to server. Make sure Node.js is running.', 'error');
-            const label = document.getElementById('booking-label');
-            if (label) label.textContent = 'Connection error.';
+            label.textContent = `${data.bookings.length} booking${data.bookings.length !== 1 ? 's' : ''} found`;
+
+            grid.innerHTML = data.bookings.map(b => {
+                const dateStr  = new Date(b.event_date).toLocaleDateString('en-IN', {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
+                const bookedOn = new Date(b.booked_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+                const cat      = (b.category || '').toLowerCase();
+                const icon     = b.category_icon || '🎟️';
+
+                return `
+                <div class="booking-card">
+                    <div class="card-top ${cat}"></div>
+                    <div class="card-body">
+                        <div class="card-cat">${icon} ${b.category || ''}</div>
+                        <div class="card-title">${b.title}</div>
+                        <div class="card-details">
+                            <span>📅 ${dateStr} &nbsp;·&nbsp; ⏰ ${b.event_time}</span>
+                            <span>📍 ${b.venue}</span>
+                        </div>
+                        <div class="card-meta-row">
+                            <span>🔖 Booking #${b.booking_id}</span>
+                            <span>📆 Booked on ${bookedOn}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="price-block">
+                            <div class="label">Total Amount</div>
+                            <div class="price">₹${parseFloat(b.total_amount).toLocaleString('en-IN')}</div>
+                            <div class="seats">🎫 ${b.seats_booked} seat${b.seats_booked > 1 ? 's' : ''} booked</div>
+                        </div>
+                        <div class="right-block">
+                            <span class="badge badge-${b.booking_status}">${b.booking_status}</span>
+                            ${b.booking_status === 'confirmed'
+                                ? `<button class="cancel-btn" onclick="cancelBooking(${b.booking_id})">Cancel Booking</button>`
+                                : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
-    });
-</script>
+
+        async function cancelBooking(id) {
+            if (!confirm('Are you sure you want to cancel this booking?')) return;
+            const res  = await fetch(`/bookings/${id}/cancel`, { method: 'PUT' });
+            const data = await res.json();
+            if (data.success) { showToast('✅ Booking cancelled successfully.'); loadBookings(); }
+            else showToast('❌ ' + (data.message || 'Could not cancel booking.'), 'error');
+        }
+
+        // ── Init ──────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res  = await fetch('/session-info');
+                const data = await res.json();
+                if (!data.loggedIn || data.user.role !== 'customer') {
+                    document.getElementById('booking-label').textContent = 'Please login to view bookings.';
+                    showToast('Please login as a customer first.', 'error');
+                    setTimeout(() => window.location = '/finallogin.html', 1500);
+                    return;
+                }
+                await loadBookings();
+            } catch(e) {
+                showToast('❌ Could not connect to server. Is Node.js running?', 'error');
+                document.getElementById('booking-label').textContent = 'Connection error.';
+            }
+        });
+    </script>
 </body>
 </html>

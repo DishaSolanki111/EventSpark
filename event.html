@@ -6,7 +6,11 @@
     <title>Events - EventSpark</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f7f8fc; min-height: 100vh; }
+        body { font-family: Arial, sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
+            background-size: cover;
+            background-position: center;
+             min-height: 100vh; }
 
         .events-hero { height: 280px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
         .events-hero h1 { font-size: 3rem; font-family: Cooper, serif; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
@@ -22,8 +26,11 @@
         .search-wrap input:focus { border-color: #2b6cb0; }
         .search-wrap::before { content: "🔍"; position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem; }
 
-        .content { max-width: 1200px; margin-top: 75px; padding: 2rem; }
-        .section-label { font-family: Cambria Math, serif; color: #718096; font-size: 0.85rem; margin-bottom: 1.2rem; }
+        .content { max-width: 1200px; 
+            margin-top: 75px; 
+            margin-left:80px;
+            padding: 2rem; align-items:center; }
+        .section-label { font-family: Cambria Math, serif; color: #f6f8fa; font-size: 0.85rem; margin-bottom: 1.2rem; }
         .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.8rem; }
         .event-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.28s, box-shadow 0.28s; border: 1px solid #e8edf5; }
         .event-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(26,54,93,0.13); }

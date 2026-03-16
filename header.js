@@ -17,7 +17,7 @@
       <a href="home.html">Home</a>
       <a href="event.html">Events</a>
       <a href="about_us.html">About Us</a>
-      <a href="contact.html">Contact</a>
+     
       <span id="nav-auth"></span>
     </div>
   </nav>`;
@@ -122,7 +122,7 @@
       padding: 0.45rem 1rem;
       border-radius: 0.5rem;
       font-weight: 600;
-      background: #fff5f5;
+      background: #f7f5ff;
       color: #c53030;
       border: 1.5px solid #fed7d7;
       text-decoration: none;
@@ -139,6 +139,7 @@
     #eventspark-nav .nav-user-badge {
       font-size: 0.88rem;
       font-weight: 600;
+      background:#1a365d;
       color: #1a365d;
       font-family: Cambria Math, serif;
       white-space: nowrap;

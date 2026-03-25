@@ -38,7 +38,7 @@
         .card-top.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
         .card-top.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
         .card-top.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
-        .card-top.social    { background: linear-gradient(90deg,#22543d,#68d391); }
+        .card-top.festival    { background: linear-gradient(90deg,#22543d,#68d391); }
         .card-top.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
         .card-body { padding: 1.4rem 1.4rem 1rem; }
         .card-cat { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem; }
@@ -88,10 +88,9 @@
     <script src="header.js"></script>
     <div class="filter-section">
         <button class="filter-btn active" onclick="filterEvents('all',this)">All Events</button>
-        <button class="filter-btn" onclick="filterEvents('weddings',this)">💍 Weddings</button>
-        <button class="filter-btn" onclick="filterEvents('corporate',this)">💼 Corporate</button>
+     
         <button class="filter-btn" onclick="filterEvents('concerts',this)">🎵 Concerts</button>
-        <button class="filter-btn" onclick="filterEvents('social',this)">🎉 Social</button>
+        <button class="filter-btn" onclick="filterEvents('festival',this)">🎉 festival</button>
         <button class="filter-btn" onclick="filterEvents('sports',this)">⚽ Sports</button>
         <div class="search-wrap">
             <input type="text" id="search-bar" placeholder="Search events..." oninput="searchEvents()">

@@ -5,20 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - EventSpark</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; 
-    }
-    body { font-family: Arial, sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
-            background-size: cover;
-            background-position: center;
-             min-height: 100vh; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+ body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
 
-    .about-hero { height: 260px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
+            z-index: 0;
+            pointer-events: none;
+        }
+    .about-hero { height: 200px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
     .about-hero h1 { font-family: Cooper, serif; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
     .about-hero p  { font-family: Cambria Math, serif; font-size: 1.1rem; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
-    .about-section { max-width: 1500px; margin: 100px 100px 55px; background: rgba(255,255,255,0.97); padding: 2.5rem 3rem; border-radius: 14px; box-shadow: 0 4px 20px rgba(26,54,93,0.1); border: 1px solid #e8edf5; animation: fadeUp 0.9s ease-out 0.3s both; }
+    .about-section { max-width: 900px; margin: 3rem auto 4rem; background: rgba(255,255,255,0.97); padding: 2.5rem 3rem; border-radius: 14px; box-shadow: 0 4px 20px rgba(26,54,93,0.1); border: 1px solid #e8edf5; animation: fadeUp 0.9s ease-out 0.3s both; }
     .about-section h2 { font-family: Cooper, serif; font-size: 2rem; color: #1a365d; margin-bottom: 1.5rem; text-align: center; }
     .about-section p { font-family: Cambria Math, serif; font-size: 1rem; line-height: 1.9; margin-bottom: 1.2rem; text-align: justify; color: #4a5568; }
     .about-section p strong { color: #1a365d; }
@@ -37,17 +43,21 @@
 
   <script src="header.js"></script>
 
-
+  <div class="about-hero">
+    <h1>About Us</h1>
+    <p>The story behind EventSpark</p>
+  </div>
 
   <section class="about-section">
     <h2>Who We Are</h2>
     <p>Welcome to <strong>EventSpark</strong> – your partner in creating unforgettable events. This platform has been designed to simplify event planning and management, making the process seamless for both organizers and participants.</p>
     <p>Our project allows users to explore upcoming events, register with ease, and helps event managers handle registrations effectively. With a clean interface and responsive design, EventSpark ensures a smooth user experience across all devices.</p>
     <p>This system is built using <strong>HTML, CSS, JavaScript</strong> for the front-end, <strong>Node.js</strong> for the back-end, and <strong>MySQL</strong> for database management. Together, these technologies provide a secure, scalable, and efficient platform.</p>
+   
     <div class="info-cards">
       <div class="info-card"><div class="icon">🎯</div><h4>Our Mission</h4><p>Simplify event planning for everyone</p></div>
       <div class="info-card"><div class="icon">💻</div><h4>Tech Stack</h4><p>HTML · CSS · JS · Node.js · MySQL</p></div>
-     
+      
     </div>
   </section>
 

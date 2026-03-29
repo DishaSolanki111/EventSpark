@@ -6,64 +6,119 @@
     <title>Events - EventSpark</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; 
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
-            background-size: cover;
-            background-position: center;
-             min-height: 100vh; }
+            z-index: 0;
+            pointer-events: none;
+        }
 
-        .events-hero { height: 280px; background: linear-gradient(rgba(0,0,0,0.52),rgba(0,0,0,0.52)), url('homebac.jpeg') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; margin-top: 92px; }
-        .events-hero h1 { font-size: 3rem; font-family: Cooper, serif; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
-        .events-hero p  { font-size: 1.1rem; font-family: Cambria Math, serif; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+     
+        .filter-section, .content, .modal-overlay, #toast {
+            position: relative; z-index: 1;
+        }
 
-        .filter-section { background: white; padding: 1.2rem 2rem; display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #e2e8f0; position: sticky; top: 92px; z-index: 50; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-        .filter-btn { padding: 0.45rem 1.1rem; border: 2px solid #e2e8f0; border-radius: 2rem; background: white; cursor: pointer; font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; font-weight: 600; transition: all 0.25s; }
+        /* ── HERO ── */
+        
+        /* ── FILTER BAR ── */
+        .filter-section {
+            background: rgba(255,255,255,0.8);
+            padding: 1.2rem 2rem;
+            display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky; top: 92px; z-index: 50;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .filter-btn {
+            padding: 0.45rem 1.1rem; border: 2px solid #e2e8f0; border-radius: 2rem;
+            background: white; cursor: pointer; font-size: 0.875rem;
+            font-family: Cambria Math, serif; color: #4a5568; font-weight: 600; transition: all 0.25s;
+        }
         .filter-btn:hover  { border-color: #2b6cb0; color: #2b6cb0; }
         .filter-btn.active { border-color: #1a365d; background: #1a365d; color: white; }
         .search-wrap { margin-left: auto; position: relative; }
-        .search-wrap input { padding: 0.45rem 1rem 0.45rem 2.2rem; border: 2px solid #e2e8f0; border-radius: 2rem; font-size: 0.875rem; font-family: Cambria Math, serif; width: 220px; outline: none; transition: border-color 0.3s; }
+        .search-wrap input {
+            padding: 0.45rem 1rem 0.45rem 2.2rem; border: 2px solid #e2e8f0;
+            border-radius: 2rem; font-size: 0.875rem; font-family: Cambria Math, serif;
+            width: 220px; outline: none; transition: border-color 0.3s; background: white;
+        }
         .search-wrap input:focus { border-color: #2b6cb0; }
         .search-wrap::before { content: "🔍"; position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); font-size: 0.8rem; }
 
-        .content { max-width: 1200px; 
-            margin-top: 75px; 
-            margin-left:80px;
-            padding: 2rem; align-items:center; }
-        .section-label { font-family: Cambria Math, serif; color: #f6f8fa; font-size: 0.85rem; margin-bottom: 1.2rem; }
-        .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.8rem; }
-        .event-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.28s, box-shadow 0.28s; border: 1px solid #e8edf5; }
-        .event-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(26,54,93,0.13); }
+        /* ── CONTENT ── */
+        .content { max-width: 1200px; margin: 0 auto; padding: 2rem; margin-top:20px; }
+        .section-label { font-family: Cambria Math, serif; color: #4a5568; font-size: 0.9rem; margin-bottom: 1.4rem; font-weight: 600; }
+
+        /* ── EVENT CARDS ── */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.8rem;
+        }
+        .event-card {
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+            transition: transform 0.28s, box-shadow 0.28s;
+            border: 1px solid #e8edf5;
+        }
+        .event-card:hover { transform: translateY(-6px); box-shadow: 0 14px 32px rgba(26,54,93,0.15); }
+
+        /* ── Category colour stripes (3 categories) ── */
         .card-top { height: 7px; }
-        .card-top.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
-        .card-top.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
-        .card-top.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
-        .card-top.festival    { background: linear-gradient(90deg,#22543d,#68d391); }
-        .card-top.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
+        .card-top.concerts  { background: linear-gradient(90deg, #553c9a, #b794f4); }
+        .card-top.sports    { background: linear-gradient(90deg, #7b341e, #f6ad55); }
+        .card-top.festivals { background: linear-gradient(90deg, #b7791f, #fbd38d); }
+
         .card-body { padding: 1.4rem 1.4rem 1rem; }
-        .card-cat { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem; }
+        .card-cat  { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem; }
         .card-title { font-size: 1.2rem; font-family: Cooper, serif; color: #1a365d; margin-bottom: 0.9rem; line-height: 1.35; }
         .card-details { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
         .card-details span { font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; }
-        .card-footer { padding: 1rem 1.4rem 1.3rem; border-top: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+        .card-footer {
+            padding: 1rem 1.4rem 1.3rem;
+            border-top: 1px solid #f0f0f0;
+            display: flex; align-items: center; justify-content: space-between;
+        }
         .price-block .price { font-size: 1.5rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
         .price-block .per   { font-size: 0.78rem; color: #a0aec0; }
         .seats-info { font-size: 0.78rem; color: #718096; margin-top: 3px; }
         .seats-bar  { width: 100px; height: 5px; background: #e2e8f0; border-radius: 3px; margin-top: 4px; }
         .seats-fill { height: 100%; border-radius: 3px; background: #2b6cb0; }
-        .book-btn { padding: 0.6rem 1.4rem; background: #1a365d; color: white; border: none; border-radius: 0.5rem; font-size: 0.9rem; font-weight: 600; font-family: Cambria Math, serif; cursor: pointer; transition: background 0.25s, transform 0.15s; }
-        .book-btn:hover   { background: #2b6cb0; transform: scale(1.03); }
+        .book-btn {
+            padding: 0.65rem 1.5rem; background: #1a365d; color: white;
+            border: none; border-radius: 0.5rem; font-size: 0.9rem; font-weight: 600;
+            font-family: Cambria Math, serif; cursor: pointer; transition: background 0.25s, transform 0.15s;
+        }
+        .book-btn:hover    { background: #2b6cb0; transform: scale(1.04); }
         .book-btn:disabled { background: #a0aec0; cursor: not-allowed; transform: none; }
 
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
+        /* ── BOOKING MODAL ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.52); z-index: 1100;
+            justify-content: center; align-items: flex-start;
+            overflow-y: auto; padding: 110px 1rem 2rem;
+        }
         .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 14px; padding: 2.2rem; width: 440px; max-width: 95vw; animation: modalIn 0.3s ease-out both; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-        @keyframes modalIn { from { opacity:0; transform:translateY(30px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+        .modal {
+            background: white; border-radius: 14px; padding: 2.2rem;
+            width: 440px; max-width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+            animation: modalIn 0.3s ease-out both; margin: auto;
+        }
+        @keyframes modalIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
         .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
         .modal-header h2 { font-family: Cooper, serif; font-size: 1.5rem; color: #1a365d; }
         .modal-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #a0aec0; }
-        .modal-close:hover { color: #4a5568; }
-        .modal-event-info { margin-bottom: 1.2rem; }
+        .modal-close:hover { color: #c53030; }
         .modal-event-info p { font-family: Cambria Math, serif; font-size: 0.9rem; color: #4a5568; margin-bottom: 5px; }
         .modal-price-display { font-size: 1.8rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; margin: 1rem 0; }
         .seats-row { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; }
@@ -77,21 +132,24 @@
         .btn-cancel-modal { flex:1; padding:0.75rem; background:#f0f4f8; color:#4a5568; border:none; border-radius:0.5rem; font-family:Cambria Math,serif; cursor:pointer; }
         .btn-cancel-modal:hover { background: #e2e8f0; }
 
-        #toast { position:fixed; bottom:28px; right:28px; padding:1rem 1.5rem; border-radius:10px; font-family:Cambria Math,serif; font-size:0.95rem; font-weight:600; z-index:999; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.15); }
+        /* ── TOAST ── */
+        #toast { position:fixed; bottom:28px; right:28px; padding:1rem 1.5rem; border-radius:10px; font-family:Cambria Math,serif; font-size:0.95rem; font-weight:600; z-index:1200; display:none; box-shadow:0 8px 24px rgba(0,0,0,0.15); }
         .toast-success { background:#f0fff4; color:#276749; border-left:4px solid #38a169; }
         .toast-error   { background:#fff5f5; color:#c53030; border-left:4px solid #e53e3e; }
-        .empty-state { grid-column:1/-1; text-align:center; padding:4rem; color:#a0aec0; font-family:Cambria Math,serif; }
+        .empty-state { grid-column:1/-1; text-align:center; padding:4rem; color:#718096; font-family:Cambria Math,serif; }
     </style>
 </head>
 <body>
 
     <script src="header.js"></script>
+
+   
+    <!-- FILTERS — 3 categories only -->
     <div class="filter-section">
         <button class="filter-btn active" onclick="filterEvents('all',this)">All Events</button>
-     
         <button class="filter-btn" onclick="filterEvents('concerts',this)">🎵 Concerts</button>
-        <button class="filter-btn" onclick="filterEvents('festival',this)">🎉 festival</button>
         <button class="filter-btn" onclick="filterEvents('sports',this)">⚽ Sports</button>
+        <button class="filter-btn" onclick="filterEvents('festivals',this)">🎪 Festivals</button>
         <div class="search-wrap">
             <input type="text" id="search-bar" placeholder="Search events..." oninput="searchEvents()">
         </div>
@@ -102,6 +160,7 @@
         <div class="events-grid" id="events-grid"></div>
     </div>
 
+    <!-- BOOKING MODAL -->
     <div class="modal-overlay" id="book-modal">
         <div class="modal">
             <div class="modal-header">
@@ -109,7 +168,7 @@
                 <button class="modal-close" onclick="closeBookModal()">✕</button>
             </div>
             <div class="modal-event-info">
-                <p><strong id="m-title" style="font-size:1rem;color:#1a365d;font-family:Cooper,serif;"></strong></p>
+                <p><strong id="m-title" style="font-size:1.05rem;color:#1a365d;font-family:Cooper,serif;"></strong></p>
                 <p>📍 <span id="m-venue"></span></p>
                 <p>📅 <span id="m-date"></span></p>
                 <p>🎫 <span id="m-avail"></span> seats available</p>
@@ -135,8 +194,10 @@
 
         function showToast(text, type = 'success') {
             const t = document.getElementById('toast');
-            t.textContent = text; t.className = type === 'success' ? 'toast-success' : 'toast-error';
-            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3500);
+            t.textContent = text;
+            t.className = type === 'success' ? 'toast-success' : 'toast-error';
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3500);
         }
 
         async function loadEvents(category = 'all', search = '') {
@@ -144,32 +205,41 @@
             let url = '/events?';
             if (category !== 'all') url += `category=${category}&`;
             if (search) url += `search=${encodeURIComponent(search)}`;
-            const res  = await fetch(url);
-            const data = await res.json();
-            // get login state from header.js session
             try {
                 const si = await fetch('/session-info');
                 const sd = await si.json();
-                isLoggedIn = sd.loggedIn; userRole = sd.loggedIn ? sd.user.role : '';
-            } catch(e) {}
-            allEvents = data.events || [];
-            renderEvents(allEvents);
+                isLoggedIn = sd.loggedIn;
+                userRole   = sd.loggedIn ? sd.user.role : '';
+
+                const res  = await fetch(url);
+                const data = await res.json();
+                if (!data.success) { showToast('Failed to load events: ' + (data.error || ''), 'error'); return; }
+                allEvents = data.events || [];
+                renderEvents(allEvents);
+            } catch(e) {
+                showToast('❌ Could not connect to server.', 'error');
+            }
         }
 
         function renderEvents(events) {
             const label = document.getElementById('result-label');
             const grid  = document.getElementById('events-grid');
             label.textContent = `Showing ${events.length} event${events.length !== 1 ? 's' : ''}`;
-            if (!events.length) { grid.innerHTML = `<div class="empty-state"><p>No events found.</p></div>`; return; }
+            if (!events.length) {
+                grid.innerHTML = `<div class="empty-state"><p>No events found. Try a different filter.</p></div>`;
+                return;
+            }
             grid.innerHTML = events.map(e => {
-                const pct = Math.round((e.available_seats / e.total_seats) * 100);
+                const pct     = Math.round((e.available_seats / e.total_seats) * 100);
                 const soldOut = e.available_seats === 0;
-                const dateStr = new Date(e.event_date).toLocaleDateString('en-IN', {weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+                const cat     = (e.category || '').toLowerCase();
+                const icon    = e.category_icon || '';
+                const dateStr = new Date(e.event_date).toLocaleDateString('en-IN', {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
                 return `
                 <div class="event-card">
-                    <div class="card-top ${e.category}"></div>
+                    <div class="card-top ${cat}"></div>
                     <div class="card-body">
-                        <div class="card-cat">${e.category}</div>
+                        <div class="card-cat">${icon} ${e.category || ''}</div>
                         <div class="card-title">${e.title}</div>
                         <div class="card-details">
                             <span>📅 ${dateStr} &nbsp;·&nbsp; ⏰ ${e.event_time}</span>
@@ -184,7 +254,8 @@
                             <div class="seats-info">${soldOut ? '🔴 Sold Out' : `🟢 ${e.available_seats} seats left`}</div>
                             <div class="seats-bar"><div class="seats-fill" style="width:${pct}%"></div></div>
                         </div>
-                        <button class="book-btn" ${soldOut ? 'disabled' : ''} onclick='openBookModal(${JSON.stringify(e).replace(/'/g,"\\'")} )'>
+                        <button class="book-btn" ${soldOut ? 'disabled' : ''}
+                            onclick='openBookModal(${JSON.stringify(e).replace(/'/g,"\\'")} )'>
                             ${soldOut ? 'Sold Out' : 'Book Now'}
                         </button>
                     </div>
@@ -206,15 +277,20 @@
         }
 
         function openBookModal(event) {
-            if (!isLoggedIn) { if (confirm('Please login to book. Go to login page?')) window.location='/finallogin.html'; return; }
+            if (!isLoggedIn) {
+                if (confirm('Please login to book events. Go to login page?'))
+                    window.location = '/finallogin.html';
+                return;
+            }
             if (userRole !== 'customer') { showToast('Only customers can book events.', 'error'); return; }
             selectedEvent = event;
             document.getElementById('m-title').textContent = event.title;
             document.getElementById('m-venue').textContent = event.venue;
-            document.getElementById('m-date').textContent  = new Date(event.event_date).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) + ' · ' + event.event_time;
+            document.getElementById('m-date').textContent  =
+                new Date(event.event_date).toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}) + ' · ' + event.event_time;
             document.getElementById('m-avail').textContent = event.available_seats;
             document.getElementById('m-price').textContent = '₹' + parseFloat(event.price).toLocaleString('en-IN') + ' / seat';
-            document.getElementById('m-seats').max = Math.min(10, event.available_seats);
+            document.getElementById('m-seats').max   = Math.min(10, event.available_seats);
             document.getElementById('m-seats').value = 1;
             updateTotal();
             document.getElementById('book-modal').classList.add('active');
@@ -230,10 +306,18 @@
 
         async function confirmBooking() {
             const seats = parseInt(document.getElementById('m-seats').value) || 1;
-            const res   = await fetch('/book', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({event_id: selectedEvent.event_id, seats_booked: seats}) });
-            const data  = await res.json();
-            if (data.success) { showToast(`🎉 Booked! Total: ₹${data.total_amount.toLocaleString('en-IN')}`); closeBookModal(); loadEvents(currentFilter, document.getElementById('search-bar').value); }
-            else showToast(data.message || 'Booking failed.', 'error');
+            const res   = await fetch('/book', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ event_id: selectedEvent.event_id, seats_booked: seats })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`🎉 Booking confirmed! Total: ₹${parseFloat(data.total_amount).toLocaleString('en-IN')}`);
+                closeBookModal();
+                loadEvents(currentFilter, document.getElementById('search-bar').value);
+            } else {
+                showToast('❌ ' + (data.message || 'Booking failed.'), 'error');
+            }
         }
 
         loadEvents();

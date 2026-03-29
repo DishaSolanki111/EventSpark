@@ -7,41 +7,43 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* ── FULL PAGE BACKGROUND IMAGE ── */
-        body {
+      body {
             font-family: Arial, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
-            background-size: cover;
-            background-position: center;
+
             position: relative;
         }
-     
+        body::before {
+            content: "";
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('homebac.jpeg');
+            z-index: 0;
+            pointer-events: none;
+        }
         .page-hero, .main, #toast { position: relative; z-index: 1; }
 
-        /* ── HERO BANNER ── */
+        /* ── HERO ── */
         .page-hero {
+            height: 200px;
 
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             color: white; text-align: center;
-            margin-top: 120px;
+            margin-top: 92px;
         }
-        .page-hero h1 { font-family: Cooper, serif; font-size: 40px; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
+        .page-hero h1 { font-family: Cooper, serif; font-size: 3rem; margin-bottom: 0.5rem; animation: fadeUp 0.8s ease-out both; }
         .page-hero p  { font-family: Cambria Math, serif; font-size: 1.1rem; opacity: 0; animation: fadeUp 0.8s ease-out 0.2s both; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
-        /* ── MAIN ── */
         .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .section-label { font-family: Cambria Math, serif; color: #4a5568; font-size: 0.9rem; margin-bottom: 1.5rem; font-weight: 600; }
 
-        /* ── BOOKINGS GRID — same square style as event cards ── */
+        /* ── BOOKINGS GRID ── */
         .bookings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 1.8rem;
         }
-
         .booking-card {
             background: white; border-radius: 12px; overflow: hidden;
             box-shadow: 0 4px 16px rgba(0,0,0,0.09);
@@ -51,47 +53,30 @@
         }
         .booking-card:hover { transform: translateY(-6px); box-shadow: 0 14px 32px rgba(26,54,93,0.15); }
 
-        /* coloured top stripe — same as event cards */
+        /* ── Category top stripe (3 categories) ── */
         .card-top { height: 7px; }
-        .card-top.weddings  { background: linear-gradient(90deg,#c53d8a,#f687b3); }
-        .card-top.corporate { background: linear-gradient(90deg,#1a365d,#2b6cb0); }
         .card-top.concerts  { background: linear-gradient(90deg,#553c9a,#b794f4); }
-        .card-top.social    { background: linear-gradient(90deg,#22543d,#68d391); }
         .card-top.sports    { background: linear-gradient(90deg,#7b341e,#f6ad55); }
+        .card-top.festivals { background: linear-gradient(90deg,#b7791f,#fbd38d); }
 
         .card-body { padding: 1.4rem 1.4rem 1rem; flex: 1; }
-        .card-cat {
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem;
-        }
+        .card-cat  { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #718096; margin-bottom: 0.4rem; }
         .card-title { font-size: 1.2rem; font-family: Cooper, serif; color: #1a365d; margin-bottom: 0.9rem; line-height: 1.35; }
         .card-details { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
         .card-details span { font-size: 0.875rem; font-family: Cambria Math, serif; color: #4a5568; }
+        .card-meta-row { display: flex; align-items: center; gap: 1rem; font-size: 0.78rem; color: #a0aec0; font-family: Arial, sans-serif; margin-top: 0.4rem; }
 
-        /* booking id + date booked row */
-        .card-meta-row {
-            display: flex; align-items: center; gap: 1rem;
-            font-size: 0.78rem; color: #a0aec0;
-            font-family: Arial, sans-serif; margin-top: 0.4rem;
-        }
-
-        /* footer — price left, status + button right */
         .card-footer {
             padding: 1rem 1.4rem 1.3rem;
             border-top: 1px solid #f0f0f0;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .price-block .price  { font-size: 1.5rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
         .price-block .label  { font-size: 0.78rem; color: #a0aec0; margin-bottom: 4px; }
+        .price-block .price  { font-size: 1.5rem; font-weight: 700; color: #1a365d; font-family: Cambria Math, serif; }
         .price-block .seats  { font-size: 0.82rem; color: #718096; font-family: Cambria Math, serif; margin-top: 2px; }
-
         .right-block { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
-        .badge {
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 700; font-family: Arial, sans-serif;
-            text-transform: capitalize; letter-spacing: 0.3px;
-        }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; font-family: Arial, sans-serif; text-transform: capitalize; letter-spacing: 0.3px; }
         .badge-confirmed { background: #f0fff4; color: #276749; }
         .badge-cancelled { background: #fff5f5; color: #c53030; }
         .badge-pending   { background: #fefcbf; color: #b7791f; }
@@ -104,26 +89,14 @@
         }
         .cancel-btn:hover { background: #c53030; color: white; border-color: #c53030; }
 
-        /* ── EMPTY STATE ── */
         .empty-state { grid-column: 1/-1; text-align: center; padding: 5rem 2rem; }
         .empty-icon  { font-size: 4rem; margin-bottom: 1rem; }
         .empty-state h2 { font-family: Cooper, serif; font-size: 1.5rem; color: #1a365d; margin-bottom: 0.5rem; }
         .empty-state p  { font-family: Cambria Math, serif; color: #718096; margin-bottom: 1.5rem; }
-        .browse-btn {
-            display: inline-block; padding: 0.7rem 1.8rem;
-            background: #1a365d; color: white; border-radius: 0.5rem;
-            text-decoration: none; font-weight: 600; font-family: Cambria Math, serif;
-            transition: background 0.25s;
-        }
+        .browse-btn { display: inline-block; padding: 0.7rem 1.8rem; background: #1a365d; color: white; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-family: Cambria Math, serif; transition: background 0.25s; }
         .browse-btn:hover { background: #2b6cb0; }
 
-        /* ── TOAST ── */
-        #toast {
-            position: fixed; bottom: 28px; right: 28px;
-            padding: 1rem 1.5rem; border-radius: 10px;
-            font-family: Cambria Math, serif; font-size: 0.95rem; font-weight: 600;
-            z-index: 1200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
+        #toast { position: fixed; bottom: 28px; right: 28px; padding: 1rem 1.5rem; border-radius: 10px; font-family: Cambria Math, serif; font-size: 0.95rem; font-weight: 600; z-index: 1200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
         .toast-success { background: #f0fff4; color: #276749; border-left: 4px solid #38a169; }
         .toast-error   { background: #fff5f5; color: #c53030; border-left: 4px solid #e53e3e; }
     </style>
@@ -132,13 +105,11 @@
 
     <script src="header.js"></script>
 
-    <!-- HERO -->
     <div class="page-hero">
         <h1>My Bookings</h1>
         <p>Track and manage all your event reservations</p>
     </div>
 
-    <!-- MAIN -->
     <div class="main">
         <div class="section-label" id="booking-label">Loading your bookings...</div>
         <div class="bookings-grid" id="bookings-list"></div>
@@ -166,7 +137,6 @@
                 showToast('❌ ' + (data.error || 'Could not load bookings.'), 'error');
                 return;
             }
-
             if (!data.bookings || !data.bookings.length) {
                 label.textContent = '0 bookings found';
                 grid.innerHTML = `
@@ -178,15 +148,12 @@
                     </div>`;
                 return;
             }
-
             label.textContent = `${data.bookings.length} booking${data.bookings.length !== 1 ? 's' : ''} found`;
-
             grid.innerHTML = data.bookings.map(b => {
                 const dateStr  = new Date(b.event_date).toLocaleDateString('en-IN', {weekday:'short', day:'2-digit', month:'short', year:'numeric'});
                 const bookedOn = new Date(b.booked_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
                 const cat      = (b.category || '').toLowerCase();
                 const icon     = b.category_icon || '🎟️';
-
                 return `
                 <div class="booking-card">
                     <div class="card-top ${cat}"></div>
@@ -227,7 +194,6 @@
             else showToast('❌ ' + (data.message || 'Could not cancel booking.'), 'error');
         }
 
-        // ── Init ──────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const res  = await fetch('/session-info');

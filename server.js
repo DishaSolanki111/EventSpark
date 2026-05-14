@@ -52,7 +52,7 @@ function isLoggedIn(req, res, next) {
 }
 
 // ============================================================
-// AUTH ROUTES
+// AUTHENTICATION  ROUTES
 // ============================================================
 
 // ── Customer Registration ────────────────────
